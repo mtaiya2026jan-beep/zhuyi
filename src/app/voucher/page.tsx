@@ -125,7 +125,7 @@ export default function VoucherPage() {
 
             <label style={lStyle}>券类型</label>
             <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-              {([['section8', 'Section 8持券（已拿到券）'], ['applying', 'Section 8申请中']] as [string, string][]).map(([v, l]) => (
+              {([['section8', 'Section 8持券（已拿到券）']] as [string, string][]).map(([v, l]) => (
                 <button key={v} onClick={() => u('voucherType', v)} style={btnBase(form.voucherType === v)}>{l}</button>
               ))}
             </div>
