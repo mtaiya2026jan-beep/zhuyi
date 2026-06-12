@@ -1,218 +1,109 @@
-'use client'
-
-import { useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
-
-function getDaysLeft(issueDate: string): number {
-  const issued = new Date(issueDate)
-  const expires = new Date(issued)
-  expires.setDate(expires.getDate() + 120)
-  const today = new Date()
-  return Math.ceil((expires.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+"use client";
+import {useState} from "react";
+function getUrgency(days:number){
+  if(days<=30) return {label:"🔴 緊急",sub:"30天內到期，立刻行動",color:"#E84A4A",bg:"#FFF0F0",border:"#E84A4A"};
+  if(days<=60) return {label:"🟠 優先",sub:"60天內到期，盡快找房",color:"#E87D2A",bg:"#FFF6EE",border:"#E87D2A"};
+  if(days<=120) return {label:"🟡 正常",sub:"120天內到期，按計劃推進",color:"#D4A017",bg:"#FFFBEE",border:"#D4A017"};
+  return {label:"🟢 充裕",sub:"超過120天，從容準備",color:"#3A8A5A",bg:"#F0FAF4",border:"#3A8A5A"};
 }
-
-function getPriority(days: number) {
-  if (days <= 30) return { level: '紧急', color: '#CC2B2B', bg: '#FFF0F0', emoji: '🔴' }
-  if (days <= 60) return { level: '优先', color: '#E07B00', bg: '#FAEEDA', emoji: '🟠' }
-  if (days <= 90) return { level: '正常', color: '#854F0B', bg: '#FFF8E6', emoji: '🟡' }
-  return { level: '充裕', color: '#1D7A3A', bg: '#EAF3DE', emoji: '🟢' }
-}
-
-type FormState = {
-  name: string
-  phone: string
-  wechat: string
-  email: string
-  issueDate: string
-  voucherType: string
-  bedrooms: string
-  borough: string
-  familySize: string
-}
-
-const defaultForm: FormState = {
-  name: '', phone: '', wechat: '', email: '',
-  issueDate: '', voucherType: 'section8',
-  bedrooms: '1', borough: '', familySize: '3'
-}
-
-export default function VoucherPage() {
-  const [step, setStep] = useState<'form' | 'result'>('form')
-  const [loading, setLoading] = useState(false)
-  const [form, setForm] = useState<FormState>(defaultForm)
-  const [result, setResult] = useState<{ days: number, priority: ReturnType<typeof getPriority> } | null>(null)
-
-  const u = (k: keyof FormState, v: string) => setForm(f => ({ ...f, [k]: v }))
-
-  const handleSubmit = async () => {
-    if (!form.issueDate || !form.borough || !form.wechat) return
-    setLoading(true)
-    const days = getDaysLeft(form.issueDate)
-    const priority = getPriority(days)
-    setResult({ days, priority })
-    try {
-      await supabase.from('voucher_holders').insert({
-        name: form.name,
-        phone: form.phone,
-        wechat: form.wechat,
-        email: form.email || null,
-        voucher_type: form.voucherType,
-        issue_date: form.issueDate,
-        days_remaining: days,
-        priority_level: priority.level,
-        bedrooms_needed: parseInt(form.bedrooms),
-        target_borough: form.borough,
-        family_size: parseInt(form.familySize),
-        status: 'searching'
-      })
-      setStep('result')
-    } catch (e) {
-      console.error(e)
-    }
-    setLoading(false)
+export default function VoucherPage(){
+  const [name,setName]=useState(""); const [phone,setPhone]=useState("");
+  const [size,setSize]=useState("3"); const [boro,setBoro]=useState("");
+  const [expiry,setExpiry]=useState(""); const [sub,setSub]=useState(false);
+  const [days,setDays]=useState(0); const [urg,setUrg]=useState<ReturnType<typeof getUrgency>|null>(null);
+  const [toast,setToast]=useState("");
+  function showToast(m:string){setToast(m);setTimeout(()=>setToast(""),2500);}
+  function handleSubmit(){
+    if(!name||!phone||!expiry){showToast("請填寫姓名、電話和持券到期日");return;}
+    const d=Math.round((new Date(expiry).getTime()-Date.now())/86400000);
+    if(d<0){showToast("持券已過期，請聯繫住房局申請延期");return;}
+    setDays(d);setUrg(getUrgency(d));setSub(true);
+    setTimeout(()=>document.getElementById("vr")?.scrollIntoView({behavior:"smooth"}),80);
   }
-
-  const iStyle = {
-    width: '100%', padding: '12px', fontSize: '15px',
-    border: '1px solid #E0E0E0', borderRadius: '8px',
-    outline: 'none', boxSizing: 'border-box' as const, marginBottom: '16px'
-  }
-
-  const lStyle = {
-    fontSize: '13px', fontWeight: '500' as const,
-    color: '#333', display: 'block', marginBottom: '6px'
-  }
-
-  const btnBase = (active: boolean) => ({
-    flex: 1, padding: '10px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px',
-    border: active ? '2px solid #CC2B2B' : '1px solid #E0E0E0',
-    background: active ? '#FFF0F0' : 'white',
-    color: active ? '#CC2B2B' : '#333',
-    fontWeight: active ? '600' as const : '400' as const,
-  })
-
-  const disabled = !form.issueDate || !form.borough || !form.wechat
-
+  const today=new Date().toISOString().split("T")[0];
+  const BOROS=["曼哈頓","布魯克林","皇后區","布朗克斯","史泰登島"];
+  const iS:React.CSSProperties={width:"100%",padding:14,border:"2px solid #D0D8E8",borderRadius:12,fontSize:16,color:"#1A2B4A",background:"#FAFBFD",outline:"none"};
   return (
-    <main style={{ minHeight: '100vh', background: '#F7F6F3', fontFamily: "'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif" }}>
-      <div style={{ background: '#CC2B2B', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <div style={{ color: 'white', fontSize: '20px', fontWeight: '700' }}>住易 ZhuYi</div>
-        <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px' }}>Section 8持券找房</div>
+    <div style={{fontFamily:"PingFang TC,sans-serif",minHeight:"100vh",background:"#F7F8FA"}}>
+      {toast&&<div style={{position:"fixed",bottom:30,left:"50%",transform:"translateX(-50%)",background:"#1A2B4A",color:"#fff",padding:"10px 20px",borderRadius:20,fontSize:13,zIndex:9999}}>{toast}</div>}
+      <div style={{background:"#2A5A9A",padding:"0 20px",position:"sticky",top:0,zIndex:100}}>
+        <div style={{maxWidth:680,margin:"0 auto",display:"flex",alignItems:"center",height:60,gap:14}}>
+          <a href="/" style={{color:"#9ABCE8",fontSize:24,textDecoration:"none",lineHeight:1}}>←</a>
+          <span style={{color:"#fff",fontSize:18,fontWeight:700}}>Section 8 持券人登記</span>
+        </div>
       </div>
-
-      <div style={{ maxWidth: '480px', margin: '0 auto', padding: '24px 16px' }}>
-
-        {step === 'form' && (
-          <div style={{ background: 'white', borderRadius: '16px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
-            <h1 style={{ fontSize: '20px', fontWeight: '700', color: '#1a1a1a', margin: '0 0 8px' }}>登记你的住房券</h1>
-            <p style={{ fontSize: '13px', color: '#666', margin: '0 0 20px', lineHeight: '1.6' }}>
-              登记后我们根据剩余时间优先为你匹配愿意接受Section 8的华人房东
-            </p>
-
-            <label style={lStyle}>你的姓名</label>
-            <input value={form.name} onChange={e => u('name', e.target.value)} placeholder="姓名" style={iStyle} />
-
-            <label style={lStyle}>微信号 <span style={{ color: '#CC2B2B' }}>*</span></label>
-            <input value={form.wechat} onChange={e => u('wechat', e.target.value)} placeholder="微信号（必填，用于发送匹配结果）" style={iStyle} />
-
-            <label style={lStyle}>手机号码</label>
-            <input value={form.phone} onChange={e => u('phone', e.target.value)} placeholder="美国手机号" style={iStyle} />
-
-            <label style={lStyle}>券类型</label>
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-              {([['section8', 'Section 8持券（已拿到券）']] as [string, string][]).map(([v, l]) => (
-                <button key={v} onClick={() => u('voucherType', v)} style={btnBase(form.voucherType === v)}>{l}</button>
-              ))}
-            </div>
-
-            <label style={lStyle}>券的发放日期 <span style={{ color: '#CC2B2B' }}>*</span></label>
-            <input type="date" value={form.issueDate} onChange={e => u('issueDate', e.target.value)}
-              style={{ ...iStyle, marginBottom: '4px' }} />
-            <p style={{ fontSize: '12px', color: '#999', margin: '0 0 16px' }}>在NYCHA发给你的券上可以找到，有效期120天</p>
-
-            <label style={lStyle}>需要几居室</label>
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-              {([['0', 'Studio'], ['1', '1居室'], ['2', '2居室'], ['3', '3居室+']] as [string, string][]).map(([v, l]) => (
-                <button key={v} onClick={() => u('bedrooms', v)} style={btnBase(form.bedrooms === v)}>{l}</button>
-              ))}
-            </div>
-
-            <label style={lStyle}>希望住哪个区 <span style={{ color: '#CC2B2B' }}>*</span></label>
-            <select value={form.borough} onChange={e => u('borough', e.target.value)}
-              style={{ ...iStyle, background: 'white' }}>
-              <option value="">请选择</option>
-              <option value="Queens">皇后区 Queens（法拉盛）</option>
-              <option value="Brooklyn">布鲁克林 Brooklyn（日落公园）</option>
-              <option value="Manhattan">曼哈顿 Manhattan</option>
-              <option value="Bronx">布朗克斯 Bronx</option>
-              <option value="Any">任何区都可以</option>
+      <div style={{background:"linear-gradient(160deg,#2A5A9A 0%,#1A3A6A 100%)",padding:"48px 24px 56px",textAlign:"center"}}>
+        <div style={{fontSize:14,color:"#9ABCE8",letterSpacing:2,marginBottom:8}}>住易 · 持券找房</div>
+        <h1 style={{margin:0,fontSize:24,fontWeight:700,color:"#fff",lineHeight:1.35}}>登記持券資訊 優先匹配華人房東</h1>
+        <p style={{margin:"10px 0 0",fontSize:14,color:"#9ABCE8",lineHeight:1.7}}>系統根據到期時間自動設定優先級 緊急個案優先處理</p>
+      </div>
+      <div style={{maxWidth:680,margin:"0 auto",padding:"24px 20px 60px"}}>
+        <div style={{background:"#fff",borderRadius:20,padding:"26px 22px",boxShadow:"0 2px 14px rgba(0,0,0,0.08)",marginBottom:20}}>
+          <div style={{fontSize:16,fontWeight:700,color:"#1A2B4A",marginBottom:20}}>📋 填寫基本資訊</div>
+          <div style={{marginBottom:16}}>
+            <label style={{display:"block",fontSize:15,color:"#5A6A8A",marginBottom:8,fontWeight:600}}>姓名（中英文均可）</label>
+            <input value={name} onChange={e=>setName(e.target.value)} placeholder="例：陳小明" style={iS}/>
+          </div>
+          <div style={{marginBottom:16}}>
+            <label style={{display:"block",fontSize:15,color:"#5A6A8A",marginBottom:8,fontWeight:600}}>聯繫電話</label>
+            <input type="tel" value={phone} onChange={e=>setPhone(e.target.value)} placeholder="例：917-555-0123" style={iS}/>
+          </div>
+          <div style={{marginBottom:16}}>
+            <label style={{display:"block",fontSize:15,color:"#5A6A8A",marginBottom:8,fontWeight:600}}>家庭人數</label>
+            <select value={size} onChange={e=>setSize(e.target.value)} style={iS}>
+              {[1,2,3,4,5,6,7,8].map(n=><option key={n} value={n}>{n} 人</option>)}
             </select>
-
-            <label style={lStyle}>家庭人口数</label>
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '24px' }}>
-              {[1, 2, 3, 4, 5, 6].map(n => (
-                <button key={n} onClick={() => u('familySize', String(n))}
-                  style={{ width: '44px', height: '44px', borderRadius: '8px', cursor: 'pointer', fontSize: '15px', border: form.familySize === String(n) ? '2px solid #CC2B2B' : '1px solid #E0E0E0', background: form.familySize === String(n) ? '#FFF0F0' : 'white', color: form.familySize === String(n) ? '#CC2B2B' : '#333', fontWeight: form.familySize === String(n) ? '600' : '400' }}>
-                  {n}
-                </button>
+          </div>
+          <div style={{marginBottom:16}}>
+            <label style={{display:"block",fontSize:15,color:"#5A6A8A",marginBottom:8,fontWeight:600}}>希望搬到紐約哪個區</label>
+            <select value={boro} onChange={e=>setBoro(e.target.value)} style={iS}>
+              <option value="">不限，均可</option>
+              {BOROS.map(b=><option key={b} value={b}>{b}</option>)}
+            </select>
+          </div>
+          <div style={{marginBottom:20}}>
+            <label style={{display:"block",fontSize:15,color:"#5A6A8A",marginBottom:8,fontWeight:600}}>持券到期日 <span style={{color:"#E84A4A"}}>★ 必填</span></label>
+            <input type="date" value={expiry} onChange={e=>setExpiry(e.target.value)} min={today} style={iS}/>
+            <div style={{fontSize:12,color:"#8899B0",marginTop:6}}>到期日印在持券信封上，通常為核發後90至120天</div>
+          </div>
+          <div style={{background:"#F7F8FA",borderRadius:14,padding:14,marginBottom:18}}>
+            <div style={{fontSize:14,fontWeight:700,color:"#1A2B4A",marginBottom:10}}>優先級說明</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+              {[{e:"🔴 緊急",d:"30天內",c:"#E84A4A"},{e:"🟠 優先",d:"60天內",c:"#E87D2A"},{e:"🟡 正常",d:"120天內",c:"#D4A017"},{e:"🟢 充裕",d:"120天以上",c:"#3A8A5A"}].map(x=>(
+                <div key={x.e} style={{display:"flex",gap:6,alignItems:"center",padding:"7px 10px",background:"#fff",borderRadius:8}}>
+                  <span style={{fontSize:13,fontWeight:700,color:x.c}}>{x.e}</span>
+                  <span style={{fontSize:12,color:"#6A7A9A"}}>{x.d}</span>
+                </div>
               ))}
             </div>
-
-            <button onClick={handleSubmit} disabled={disabled || loading}
-              style={{ width: '100%', padding: '16px', background: disabled ? '#E0E0E0' : '#CC2B2B', color: 'white', border: 'none', borderRadius: '12px', fontSize: '16px', fontWeight: '600', cursor: disabled ? 'not-allowed' : 'pointer' }}>
-              {loading ? '提交中...' : '登记并查看剩余时间 →'}
-            </button>
+          </div>
+          <button onClick={handleSubmit} style={{width:"100%",padding:16,borderRadius:14,border:"none",background:"linear-gradient(135deg,#2A5A9A 0%,#1A3A6A 100%)",color:"#fff",fontSize:18,fontWeight:700,cursor:"pointer",boxShadow:"0 4px 16px rgba(42,90,154,0.3)"}}>提交登記</button>
+        </div>
+        {sub&&urg&&(
+          <div id="vr">
+            <div style={{background:urg.bg,border:"2.5px solid "+urg.border,borderRadius:20,padding:24,marginBottom:16,textAlign:"center"}}>
+              <div style={{fontSize:32,fontWeight:800,color:urg.color,marginBottom:8}}>{urg.label}</div>
+              <div style={{fontSize:16,color:"#1A2B4A",fontWeight:600,marginBottom:6}}>{urg.sub}</div>
+              <div style={{fontSize:14,color:"#5A6A8A"}}>距離到期還有 <b style={{color:urg.color}}>{days} 天</b></div>
+            </div>
+            <div style={{background:"#fff",borderRadius:20,padding:22,boxShadow:"0 2px 14px rgba(0,0,0,0.07)",marginBottom:16}}>
+              <div style={{fontSize:16,fontWeight:700,color:"#1A2B4A",marginBottom:14}}>✅ 登記成功 你的下一步</div>
+              {[
+                {icon:"📞",text:days<=30?"立即致電住房局申請延期（Extension）":"住易會優先為你匹配接受Section 8的華人房東"},
+                {icon:"🔍",text:"在 Housing Connect 搜尋目前開放的保障房房源"},
+                {icon:"📅",text:"距離到期還有 "+days+" 天，請保持電話暢通"},
+              ].map((a,i)=>(
+                <div key={i} style={{display:"flex",gap:12,padding:"12px 0",borderBottom:i<2?"1px solid #F0F3F8":"none",alignItems:"flex-start"}}>
+                  <span style={{fontSize:20}}>{a.icon}</span>
+                  <span style={{fontSize:15,color:"#2A3A5A",lineHeight:1.7}}>{a.text}</span>
+                </div>
+              ))}
+            </div>
+            <button onClick={()=>setSub(false)} style={{width:"100%",padding:13,borderRadius:12,border:"2px solid #D0D8E8",background:"#fff",color:"#5A6A8A",fontSize:14,fontWeight:600,cursor:"pointer"}}>修改資訊 / 重新登記</button>
           </div>
         )}
-
-        {step === 'result' && result && (
-          <div style={{ background: 'white', borderRadius: '16px', padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)' }}>
-            <div style={{ background: result.priority.bg, border: `2px solid ${result.priority.color}`, borderRadius: '12px', padding: '24px', textAlign: 'center', marginBottom: '20px' }}>
-              <div style={{ fontSize: '32px', marginBottom: '8px' }}>{result.priority.emoji}</div>
-              <div style={{ fontSize: '13px', color: result.priority.color, fontWeight: '500', marginBottom: '8px' }}>你的券剩余时间</div>
-              <div style={{ fontSize: '56px', fontWeight: '700', color: result.priority.color, lineHeight: '1' }}>{result.days}</div>
-              <div style={{ fontSize: '16px', color: result.priority.color, margin: '4px 0 12px' }}>天</div>
-              <div style={{ background: result.priority.color, color: 'white', padding: '6px 16px', borderRadius: '20px', display: 'inline-block', fontSize: '13px', fontWeight: '600' }}>
-                {result.priority.level}级别
-              </div>
-            </div>
-
-            {result.days <= 30 && (
-              <div style={{ background: '#FFF0F0', border: '1px solid #FFCCCC', borderRadius: '8px', padding: '12px', marginBottom: '16px' }}>
-                <p style={{ fontSize: '13px', color: '#CC2B2B', margin: '0', lineHeight: '1.6', fontWeight: '500' }}>
-                  ⚠️ 剩余不足30天，属于紧急情况。我们会优先为你匹配房东，请保持微信畅通。
-                </p>
-              </div>
-            )}
-
-            <p style={{ fontSize: '14px', color: '#333', lineHeight: '1.6', margin: '0 0 12px' }}>
-              你的登记已收到。我们根据你的需求（{form.borough}·{form.bedrooms === '0' ? 'Studio' : form.bedrooms + '居室'}）在华人房东库中为你匹配房源。
-            </p>
-            <p style={{ fontSize: '13px', color: '#666', lineHeight: '1.6', margin: '0 0 20px' }}>
-              匹配结果会通过<strong>微信</strong>联系你（{form.wechat}）。
-            </p>
-
-            <div style={{ background: '#F7F6F3', borderRadius: '8px', padding: '14px', marginBottom: '20px' }}>
-              <p style={{ fontSize: '13px', fontWeight: '500', color: '#333', margin: '0 0 6px' }}>同时建议你：</p>
-              <p style={{ fontSize: '12px', color: '#666', margin: '0', lineHeight: '1.8' }}>
-                ① 向NYCHA申请延期（如有特殊情况可申请30-60天延期）<br />
-                ② 继续自行在Craigslist、Zillow搜索<br />
-                ③ 告知亲友帮你留意愿意接受券的房东
-              </p>
-            </div>
-
-            <button onClick={() => { setStep('form'); setForm(defaultForm) }}
-              style={{ width: '100%', padding: '12px', background: 'transparent', color: '#999', border: '1px solid #E0E0E0', borderRadius: '12px', fontSize: '14px', cursor: 'pointer' }}>
-              帮其他家庭登记
-            </button>
-          </div>
-        )}
+        <div style={{textAlign:"center",fontSize:11,color:"#A0AABF",marginTop:24}}>住易 ZhuYi · Section 8 持券找房服務</div>
       </div>
-    </main>
-  )
+    </div>
+  );
 }

@@ -1,306 +1,111 @@
-'use client'
-
-import { useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
-
-type FormState = {
-  contact_name: string
-  contact_phone: string
-  contact_wechat: string
-  contact_email: string
-  preferred_contact: string
-  borough: string
-  neighborhood: string
-  unit_type: string
-  bedrooms_available: string
-  monthly_rent_min: string
-  monthly_rent_max: string
-  available_from: string
-  section8_experience: string
-  pets_allowed: string
-  notes: string
-}
-
-const defaultForm: FormState = {
-  contact_name: '',
-  contact_phone: '',
-  contact_wechat: '',
-  contact_email: '',
-  preferred_contact: 'wechat',
-  borough: '',
-  neighborhood: '',
-  unit_type: '',
-  bedrooms_available: '1',
-  monthly_rent_min: '',
-  monthly_rent_max: '',
-  available_from: '',
-  section8_experience: 'none',
-  pets_allowed: 'false',
-  notes: '',
-}
-
-export default function LandlordPage() {
-  const [step, setStep] = useState<'form' | 'done'>('form')
-  const [loading, setLoading] = useState(false)
-  const [form, setForm] = useState<FormState>(defaultForm)
-
-  const u = (k: keyof FormState, v: string) => setForm(f => ({ ...f, [k]: v }))
-
-  const disabled = !form.contact_wechat || !form.borough || !form.unit_type || !form.monthly_rent_min
-
-  const handleSubmit = async () => {
-    if (disabled) return
-    setLoading(true)
-    try {
-      await supabase.from('landlords').insert({
-        contact_name: form.contact_name,
-        contact_phone: form.contact_phone,
-        contact_wechat: form.contact_wechat,
-        contact_email: form.contact_email || null,
-        preferred_contact: form.preferred_contact,
-        borough: form.borough,
-        neighborhood: form.neighborhood,
-        unit_type: form.unit_type,
-        bedrooms_available: parseInt(form.bedrooms_available),
-        monthly_rent_min: parseFloat(form.monthly_rent_min),
-        monthly_rent_max: form.monthly_rent_max ? parseFloat(form.monthly_rent_max) : null,
-        available_from: form.available_from || null,
-        accepts_section8: true,
-        section8_experience: form.section8_experience,
-        pets_allowed: form.pets_allowed === 'true',
-        notes: form.notes,
-        is_verified: false,
-        is_active: true,
-      })
-      setStep('done')
-    } catch (e) {
-      console.error(e)
-    }
-    setLoading(false)
+"use client";
+import {useState} from "react";
+export default function LandlordPage(){
+  const [name,setName]=useState(""); const [phone,setPhone]=useState("");
+  const [boro,setBoro]=useState(""); const [units,setUnits]=useState("1");
+  const [status,setStatus]=useState("new"); const [submitted,setSubmitted]=useState(false);
+  const [toast,setToast]=useState("");
+  function showToast(m:string){setToast(m);setTimeout(()=>setToast(""),2500);}
+  function handleSubmit(){
+    if(!name||!phone||!boro){showToast("請填寫姓名、電話和所在區");return;}
+    setSubmitted(true);
+    setTimeout(()=>document.getElementById("lr")?.scrollIntoView({behavior:"smooth"}),80);
   }
-
-  const iStyle = {
-    width: '100%', padding: '12px', fontSize: '15px',
-    border: '1px solid #E0E0E0', borderRadius: '8px',
-    outline: 'none', boxSizing: 'border-box' as const,
-    marginBottom: '16px', background: 'white',
-  }
-
-  const lStyle = {
-    fontSize: '13px', fontWeight: '500' as const,
-    color: '#333', display: 'block', marginBottom: '6px',
-  }
-
-  const btnBase = (active: boolean, color = '#0F6E56', bg = '#E1F5EE') => ({
-    flex: 1, padding: '10px', borderRadius: '8px', cursor: 'pointer', fontSize: '13px',
-    border: active ? `2px solid ${color}` : '1px solid #E0E0E0',
-    background: active ? bg : 'white',
-    color: active ? color : '#333',
-    fontWeight: active ? '600' as const : '400' as const,
-  })
-
+  const STEPS=[
+    {num:"01",icon:"✅",title:"房東資格確認",items:["房屋產權清晰，無嚴重債務糾紛","無拖欠市政稅款或水電費","無嚴重違建或建築違規記錄","1978年前建築需提供鉛漆披露文件"]},
+    {num:"02",icon:"📋",title:"提交租賃申請包",items:["租賃申請表（Request for Tenancy Approval）","第8條房東登記表","鉛漆披露文件（如適用）","可透過 NYCHA Owner Extranet 線上提交"]},
+    {num:"03",icon:"🔍",title:"NYCHA 房屋質量檢查（HQS）",items:["提交申請包後5個工作日內安排檢查","核查電氣安全、水管、窗戶、門鎖、煙霧及CO警報器","2025年10月起採用新版 NSPIRE 標準","不合格項目需整改並重新檢查"]},
+    {num:"04",icon:"📝",title:"簽訂住房援助合同（HAP）",items:["通過檢查後與 NYCHA 簽訂 HAP 合同","確定政府補貼金額和租客自付比例","租客一般支付調整後月收入的30至40%","其餘由 NYCHA 每月直接電匯給房東"]},
+    {num:"05",icon:"🔄",title:"年度續租與檢查",items:["每年需提前60天提交租金調整申請","NYCHA每年進行例行複查","及時回應租客維修請求","保持Owner Extranet帳號資料最新"]},
+  ];
+  const iS:React.CSSProperties={width:"100%",padding:14,border:"2px solid #D0D8E8",borderRadius:12,fontSize:16,color:"#1A2B4A",background:"#FAFBFD",outline:"none"};
   return (
-    <main style={{
-      minHeight: '100vh', background: '#F7F6F3',
-      fontFamily: "'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif",
-    }}>
-      <div style={{
-        background: '#0F6E56', padding: '16px 24px',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      }}>
-        <div style={{ color: 'white', fontSize: '20px', fontWeight: '700' }}>住易 ZhuYi</div>
-        <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px' }}>华人房东登记</div>
+    <div style={{fontFamily:"PingFang TC,sans-serif",minHeight:"100vh",background:"#F7F8FA"}}>
+      {toast&&<div style={{position:"fixed",bottom:30,left:"50%",transform:"translateX(-50%)",background:"#1A2B4A",color:"#fff",padding:"10px 20px",borderRadius:20,fontSize:13,zIndex:9999}}>{toast}</div>}
+      <div style={{background:"#2A5A9A",padding:"0 20px",position:"sticky",top:0,zIndex:100}}>
+        <div style={{maxWidth:680,margin:"0 auto",display:"flex",alignItems:"center",height:60,gap:14}}>
+          <a href="/" style={{color:"#9ABCE8",fontSize:24,textDecoration:"none",lineHeight:1}}>←</a>
+          <span style={{color:"#fff",fontSize:18,fontWeight:700}}>華人房東登記</span>
+        </div>
       </div>
-
-      <div style={{ maxWidth: '480px', margin: '0 auto', padding: '24px 16px' }}>
-
-        {step === 'form' && (
-          <div>
-            {/* 顶部说明 */}
-            <div style={{
-              background: '#E1F5EE', border: '1px solid #9FE1CB',
-              borderRadius: '12px', padding: '16px', marginBottom: '20px',
-            }}>
-              <p style={{ fontSize: '14px', fontWeight: '600', color: '#085041', margin: '0 0 6px' }}>
-                🏢 为什么登记接受Section 8？
-              </p>
-              <p style={{ fontSize: '13px', color: '#0F6E56', margin: '0', lineHeight: '1.6' }}>
-                · 政府直接付租金，稳定无拖欠<br />
-                · 我们帮你筛选合格华人租客<br />
-                · 免费登记，无佣金收取
-              </p>
+      <div style={{background:"linear-gradient(160deg,#2A5A9A 0%,#1A3A6A 100%)",padding:"48px 24px 56px",textAlign:"center"}}>
+        <div style={{fontSize:14,color:"#9ABCE8",letterSpacing:2,marginBottom:8}}>住易 · 房東服務</div>
+        <h1 style={{margin:0,fontSize:24,fontWeight:700,color:"#fff",lineHeight:1.35}}>接受 Section 8 持券 穩定收租不怕空置</h1>
+        <p style={{margin:"12px 0 0",fontSize:14,color:"#9ABCE8",lineHeight:1.7}}>政府直接電匯補貼 每月準時到賬 住易幫你匹配合適租客</p>
+        <div style={{marginTop:16,display:"flex",justifyContent:"center",gap:24}}>
+          {[["2.5萬+","紐約市8券房東"],["8.5萬","持券家庭等待配對"],["5天","檢查安排時間"]].map(([n,l])=>(
+            <div key={l} style={{textAlign:"center"}}>
+              <div style={{fontSize:18,fontWeight:800,color:"#FFD066"}}>{n}</div>
+              <div style={{fontSize:11,color:"#9ABCE8",marginTop:2}}>{l}</div>
             </div>
-
-            <div style={{
-              background: 'white', borderRadius: '16px',
-              padding: '24px', boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-            }}>
-              <h1 style={{ fontSize: '20px', fontWeight: '700', color: '#1a1a1a', margin: '0 0 20px' }}>
-                登记你的房源
-              </h1>
-
-              {/* 联系信息 */}
-              <p style={{ fontSize: '12px', fontWeight: '600', color: '#999', margin: '0 0 14px', textTransform: 'uppercase' as const, letterSpacing: '0.05em' }}>联系方式</p>
-
-              <label style={lStyle}>你的姓名</label>
-              <input value={form.contact_name} onChange={e => u('contact_name', e.target.value)}
-                placeholder="姓名" style={iStyle} />
-
-              <label style={lStyle}>微信号 <span style={{ color: '#0F6E56' }}>*</span></label>
-              <input value={form.contact_wechat} onChange={e => u('contact_wechat', e.target.value)}
-                placeholder="微信号（必填，用于发送租客匹配信息）" style={iStyle} />
-
-              <label style={lStyle}>手机号码</label>
-              <input value={form.contact_phone} onChange={e => u('contact_phone', e.target.value)}
-                placeholder="美国手机号" style={iStyle} />
-
-              <label style={lStyle}>首选联系方式</label>
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-                {([['wechat', '微信'], ['phone', '电话'], ['email', '邮件']] as [string, string][]).map(([v, l]) => (
-                  <button key={v} onClick={() => u('preferred_contact', v)}
-                    style={btnBase(form.preferred_contact === v)}>{l}</button>
+          ))}
+        </div>
+      </div>
+      <div style={{maxWidth:680,margin:"0 auto",padding:"20px 20px 60px"}}>
+        <div style={{background:"#FFF8EC",border:"2px solid #FFD066",borderRadius:16,padding:"16px 18px",marginBottom:20}}>
+          <div style={{fontSize:14,fontWeight:700,color:"#B05A00",marginBottom:6}}>⚠️ 2025至2026 重要更新</div>
+          <div style={{fontSize:13,color:"#7A5A2A",lineHeight:1.7}}>
+            · NYCHA 自2025年8月起暫停對等候名單申請者發放新持券，現有持券人仍可正常找房<br/>
+            · 2025年10月起採用新版 NSPIRE 檢查標準（煙霧及CO警報器要求更嚴格）
+          </div>
+        </div>
+        <div style={{background:"#fff",borderRadius:20,padding:22,boxShadow:"0 2px 14px rgba(0,0,0,0.07)",marginBottom:20}}>
+          <div style={{fontSize:16,fontWeight:700,color:"#1A2B4A",marginBottom:16}}>📋 成為8券房東：五步流程</div>
+          {STEPS.map((s,i)=>(
+            <div key={s.num} style={{display:"flex",gap:14,marginBottom:i<STEPS.length-1?20:0}}>
+              <div style={{flexShrink:0}}>
+                <div style={{width:36,height:36,borderRadius:"50%",background:"#1A2B4A",color:"#fff",fontSize:13,fontWeight:800,display:"flex",alignItems:"center",justifyContent:"center"}}>{s.num}</div>
+              </div>
+              <div style={{flex:1}}>
+                <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+                  <span style={{fontSize:18}}>{s.icon}</span>
+                  <span style={{fontSize:15,fontWeight:700,color:"#1A2B4A"}}>{s.title}</span>
+                </div>
+                {s.items.map((item,j)=>(
+                  <div key={j} style={{display:"flex",gap:8,marginBottom:6,alignItems:"flex-start"}}>
+                    <div style={{width:5,height:5,borderRadius:"50%",background:"#2A5A9A",flexShrink:0,marginTop:7}}/>
+                    <span style={{fontSize:13,color:"#4A5A7A",lineHeight:1.6}}>{item}</span>
+                  </div>
                 ))}
               </div>
-
-              {/* 房源信息 */}
-              <p style={{ fontSize: '12px', fontWeight: '600', color: '#999', margin: '16px 0 14px', textTransform: 'uppercase' as const, letterSpacing: '0.05em' }}>房源信息</p>
-
-              <label style={lStyle}>所在区域 <span style={{ color: '#0F6E56' }}>*</span></label>
-              <select value={form.borough} onChange={e => u('borough', e.target.value)} style={iStyle}>
-                <option value="">请选择</option>
-                <option value="Queens">皇后区 Queens（法拉盛）</option>
-                <option value="Brooklyn">布鲁克林 Brooklyn（日落公园）</option>
-                <option value="Manhattan">曼哈顿 Manhattan</option>
-                <option value="Bronx">布朗克斯 Bronx</option>
-                <option value="Staten Island">史坦顿岛 Staten Island</option>
+            </div>
+          ))}
+        </div>
+        <div style={{background:"#fff",borderRadius:20,padding:"26px 22px",boxShadow:"0 2px 14px rgba(0,0,0,0.08)",marginBottom:20}}>
+          <div style={{fontSize:16,fontWeight:700,color:"#1A2B4A",marginBottom:6}}>🏘️ 在住易登記你的房源</div>
+          <div style={{fontSize:13,color:"#8899B0",marginBottom:18}}>住易優先為你匹配有持券的華人租客，免中介費</div>
+          <div style={{marginBottom:16}}>
+            <label style={{display:"block",fontSize:15,color:"#5A6A8A",marginBottom:8,fontWeight:600}}>你的姓名</label>
+            <input value={name} onChange={e=>setName(e.target.value)} placeholder="例：王先生 / Mr. Wang" style={iS}/>
+          </div>
+          <div style={{marginBottom:16}}>
+            <label style={{display:"block",fontSize:15,color:"#5A6A8A",marginBottom:8,fontWeight:600}}>聯繫電話</label>
+            <input type="tel" value={phone} onChange={e=>setPhone(e.target.value)} placeholder="例：718-555-0123" style={iS}/>
+          </div>
+          {[
+            {label:"房源所在區",val:boro,set:setBoro,opts:[{v:"",l:"請選擇"},{v:"manhattan",l:"曼哈頓"},{v:"brooklyn",l:"布魯克林"},{v:"queens",l:"皇后區"},{v:"bronx",l:"布朗克斯"},{v:"staten",l:"史泰登島"}]},
+            {label:"可出租單元數",val:units,set:setUnits,opts:[{v:"1",l:"1套"},{v:"2-5",l:"2至5套"},{v:"6-10",l:"6至10套"},{v:"11+",l:"11套以上"}]},
+            {label:"目前狀態",val:status,set:setStatus,opts:[{v:"new",l:"剛開始了解，想知道流程"},{v:"ready",l:"房屋已準備好，可以接受檢查"},{v:"inspected",l:"已通過檢查，正在找租客"},{v:"existing",l:"已有8券租客，想增加房源"}]},
+          ].map((f,i)=>(
+            <div key={i} style={{marginBottom:16}}>
+              <label style={{display:"block",fontSize:15,color:"#5A6A8A",marginBottom:8,fontWeight:600}}>{f.label}</label>
+              <select value={f.val} onChange={e=>f.set(e.target.value)} style={iS}>
+                {f.opts.map(o=><option key={o.v} value={o.v}>{o.l}</option>)}
               </select>
-
-              <label style={lStyle}>具体街区（选填）</label>
-              <input value={form.neighborhood} onChange={e => u('neighborhood', e.target.value)}
-                placeholder="如：法拉盛Main St附近" style={iStyle} />
-
-              <label style={lStyle}>房型 <span style={{ color: '#0F6E56' }}>*</span></label>
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' as const }}>
-                {([['studio', 'Studio'], ['1br', '1居室'], ['2br', '2居室'], ['3br', '3居室+'], ['mixed', '多套']] as [string, string][]).map(([v, l]) => (
-                  <button key={v} onClick={() => u('unit_type', v)}
-                    style={{ ...btnBase(form.unit_type === v), flex: 'none', minWidth: '72px' }}>{l}</button>
-                ))}
-              </div>
-
-              <label style={lStyle}>可出租间数</label>
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-                {[1, 2, 3, 4, 5].map(n => (
-                  <button key={n} onClick={() => u('bedrooms_available', String(n))}
-                    style={{ width: '44px', height: '44px', borderRadius: '8px', cursor: 'pointer', fontSize: '15px', border: form.bedrooms_available === String(n) ? '2px solid #0F6E56' : '1px solid #E0E0E0', background: form.bedrooms_available === String(n) ? '#E1F5EE' : 'white', color: form.bedrooms_available === String(n) ? '#0F6E56' : '#333', fontWeight: form.bedrooms_available === String(n) ? '600' : '400' }}>
-                    {n}
-                  </button>
-                ))}
-              </div>
-
-              <label style={lStyle}>月租金范围（美元）<span style={{ color: '#0F6E56' }}>*</span></label>
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', alignItems: 'center' }}>
-                <input value={form.monthly_rent_min} onChange={e => u('monthly_rent_min', e.target.value)}
-                  placeholder="最低 如：1800" type="number"
-                  style={{ ...iStyle, marginBottom: 0, flex: 1 }} />
-                <span style={{ color: '#999', flexShrink: 0 }}>—</span>
-                <input value={form.monthly_rent_max} onChange={e => u('monthly_rent_max', e.target.value)}
-                  placeholder="最高（选填）" type="number"
-                  style={{ ...iStyle, marginBottom: 0, flex: 1 }} />
-              </div>
-
-              <label style={lStyle}>最早可入住日期（选填）</label>
-              <input type="date" value={form.available_from} onChange={e => u('available_from', e.target.value)}
-                style={iStyle} />
-
-              {/* Section 8经验 */}
-              <p style={{ fontSize: '12px', fontWeight: '600', color: '#999', margin: '4px 0 14px', textTransform: 'uppercase' as const, letterSpacing: '0.05em' }}>Section 8经验</p>
-
-              <label style={lStyle}>你之前做过Section 8房东吗？</label>
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-                {([['none', '第一次'], ['some', '做过1-2次'], ['experienced', '很熟悉']] as [string, string][]).map(([v, l]) => (
-                  <button key={v} onClick={() => u('section8_experience', v)}
-                    style={btnBase(form.section8_experience === v)}>{l}</button>
-                ))}
-              </div>
-
-              <label style={lStyle}>是否允许宠物？</label>
-              <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-                {([['false', '不允许'], ['true', '允许']] as [string, string][]).map(([v, l]) => (
-                  <button key={v} onClick={() => u('pets_allowed', v)}
-                    style={btnBase(form.pets_allowed === v)}>{l}</button>
-                ))}
-              </div>
-
-              <label style={lStyle}>其他说明（选填）</label>
-              <textarea value={form.notes} onChange={e => u('notes', e.target.value)}
-                placeholder="如：只接受小家庭、需要信用记录等"
-                rows={3}
-                style={{ ...iStyle, resize: 'vertical' as const }} />
-
-              <button onClick={handleSubmit} disabled={disabled || loading}
-                style={{
-                  width: '100%', padding: '16px',
-                  background: disabled ? '#E0E0E0' : '#0F6E56',
-                  color: 'white', border: 'none', borderRadius: '12px',
-                  fontSize: '16px', fontWeight: '600',
-                  cursor: disabled ? 'not-allowed' : 'pointer',
-                }}>
-                {loading ? '提交中...' : '免费登记我的房源 →'}
-              </button>
-
-              <p style={{ fontSize: '12px', color: '#999', textAlign: 'center' as const, marginTop: '12px' }}>
-                提交后住易团队会在48小时内核验，核验通过即进入匹配池
-              </p>
+            </div>
+          ))}
+          <button onClick={handleSubmit} style={{width:"100%",padding:16,borderRadius:14,border:"none",background:"linear-gradient(135deg,#2A5A9A 0%,#1A3A6A 100%)",color:"#fff",fontSize:18,fontWeight:700,cursor:"pointer",boxShadow:"0 4px 16px rgba(42,90,154,0.3)"}}>提交登記</button>
+        </div>
+        {submitted&&(
+          <div id="lr">
+            <div style={{background:"#F0FAF5",border:"2.5px solid #3A8A5A",borderRadius:20,padding:22,marginBottom:16,textAlign:"center"}}>
+              <div style={{fontSize:28,fontWeight:800,color:"#3A8A5A",marginBottom:8}}>✅ 登記成功</div>
+              <div style={{fontSize:14,color:"#5A6A8A"}}>住易將優先為你匹配有持券的華人租客</div>
             </div>
           </div>
         )}
-
-        {step === 'done' && (
-          <div style={{
-            background: 'white', borderRadius: '16px',
-            padding: '32px 24px', textAlign: 'center' as const,
-            boxShadow: '0 1px 3px rgba(0,0,0,0.08)',
-          }}>
-            <div style={{ fontSize: '48px', marginBottom: '16px' }}>✅</div>
-            <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#1a1a1a', margin: '0 0 12px' }}>
-              房源登记成功
-            </h2>
-            <p style={{ fontSize: '14px', color: '#666', lineHeight: '1.6', margin: '0 0 20px' }}>
-              我们会在48小时内通过微信联系你（{form.contact_wechat}）完成核验。
-              核验通过后，符合条件的持券租客信息会发送给你。
-            </p>
-
-            <div style={{
-              background: '#E1F5EE', border: '1px solid #9FE1CB',
-              borderRadius: '12px', padding: '16px', marginBottom: '20px', textAlign: 'left' as const,
-            }}>
-              <p style={{ fontSize: '13px', fontWeight: '600', color: '#085041', margin: '0 0 8px' }}>
-                接下来的流程：
-              </p>
-              <p style={{ fontSize: '12px', color: '#0F6E56', margin: '0', lineHeight: '1.8' }}>
-                ① 住易团队微信联系确认房源信息<br />
-                ② 核验通过，房源进入华人租客匹配池<br />
-                ③ 有符合条件的持券租客时，我们推送给你<br />
-                ④ 双方确认后安排看房，签约
-              </p>
-            </div>
-
-            <button onClick={() => { setStep('form'); setForm(defaultForm) }}
-              style={{
-                width: '100%', padding: '12px', background: 'transparent',
-                color: '#999', border: '1px solid #E0E0E0',
-                borderRadius: '12px', fontSize: '14px', cursor: 'pointer',
-              }}>
-              登记另一套房源
-            </button>
-          </div>
-        )}
+        <div style={{textAlign:"center",fontSize:11,color:"#A0AABF",marginTop:24}}>資料來源：NYCHA官網 2025 · 住易 ZhuYi</div>
       </div>
-    </main>
-  )
+    </div>
+  );
 }
