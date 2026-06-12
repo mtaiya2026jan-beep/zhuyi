@@ -1,228 +1,82 @@
-'use client'
-
-import { useState } from 'react'
-
-const cards = [
-  {
-    id: 'ami',
-    emoji: '🏠',
-    title: '我想申请福利房',
-    desc: '查询家庭收入是否符合Section 8或Housing Connect申请条件',
-    tags: ['AMI资格测算', '楼盘匹配', '材料清单'],
-    color: '#CC2B2B',
-    bg: '#FFF0F0',
-    href: '/ami',
-    cta: '免费测算资格 →',
-  },
-  {
-    id: 'voucher',
-    emoji: '🎫',
-    title: '我手里有券，正在找房',
-    desc: '查看剩余天数，登记后优先匹配愿意接受Section 8的华人房东',
-    tags: ['120天倒计时', '优先级排序', '华人房东匹配'],
-    color: '#E07B00',
-    bg: '#FAEEDA',
-    href: '/voucher',
-    cta: '登记找房 →',
-    badge: '法院判决后更难找房，立即行动',
-  },
-  {
-    id: 'renewal',
-    emoji: '📋',
-    title: '我已入住，需要年审',
-    desc: '年审截止日期提醒，错过就可能失去住房资格',
-    tags: ['截止日期提醒', '材料核查', '中文辅助'],
-    color: '#185FA5',
-    bg: '#E6F1FB',
-    href: '/renewal',
-    cta: '设置年审提醒 →',
-    comingSoon: true,
-  },
-  {
-    id: 'landlord',
-    emoji: '🏢',
-    title: '我是房东，愿意接受Section 8',
-    desc: '登记房源，我们帮你匹配合规华人租客，减少空置期',
-    tags: ['房客匹配', '政府稳定租金', '免费登记'],
-    color: '#0F6E56',
-    bg: '#E1F5EE',
-    href: '/landlord',
-    cta: '登记房源 →',
-    comingSoon: true,
-  },
-]
-
-export default function HomePage() {
-  const [hoveredId, setHoveredId] = useState<string | null>(null)
-
+"use client";
+import {useRouter} from "next/navigation";
+const CARDS=[
+  {icon:"🏠",title:"我想申請保障房",sub:"AMI測算  找到可申請項目",href:"/ami",color:"#1A2B4A"},
+  {icon:"🎫",title:"我有 Section 8 持券",sub:"登記持券  優先匹配華人房東",href:"/voucher",color:"#2A5A9A"},
+  {icon:"🏘️",title:"我是華人房東",sub:"登記房源  接受持券租客",href:"/landlord",color:"#3A7A6A"},
+  {icon:"📋",title:"我已經申請了",sub:"診斷進度  查看卡在哪個環節",href:"/status",color:"#7A4A9A"},
+  {icon:"🏛️",title:"福利住房數據庫",sub:"三大機構房源  全美8券房東  每月更新",href:"/database",color:"#B05A00"},
+];
+const PRICING=[
+  {icon:"🆓",label:"AMI資格測算",desc:"輸入收入即知道你屬於哪個檔位、可申請哪些項目",price:"永久免費",priceColor:"#4AE89A",free:true},
+  {icon:"📋",label:"申請全程指引",desc:"中文填表指導、文件清單、截止日提醒、申請狀態追蹤",price:"$19.9 / 月",priceColor:"#FFD066",free:false},
+  {icon:"📅",label:"年審截止日提醒",desc:"Section 8 年審截止、Housing Connect 抽籤到期，統一管理不漏接",price:"$79 / 年",priceColor:"#FFD066",free:false},
+  {icon:"🤝",label:"持券成功找房撮合",desc:"為持券人配對接受 Section 8 的華人房東，簽約後一次性收費",price:"$1,400 / 單",priceColor:"#FFD066",free:false},
+];
+export default function Home(){
+  const router=useRouter();
   return (
-    <main style={{
-      minHeight: '100vh',
-      background: '#F7F6F3',
-      fontFamily: "'PingFang SC','Hiragino Sans GB','Microsoft YaHei',sans-serif",
-    }}>
-      {/* 顶部导航 */}
-      <div style={{
-        background: '#CC2B2B',
-        padding: '16px 24px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}>
-        <div style={{ color: 'white', fontSize: '20px', fontWeight: '700' }}>住易 ZhuYi</div>
-        <div style={{ color: 'rgba(255,255,255,0.8)', fontSize: '12px' }}>纽约华人住房福利平台</div>
-      </div>
-
-      <div style={{ maxWidth: '540px', margin: '0 auto', padding: '28px 16px' }}>
-
-        {/* 头部介绍 */}
-        <div style={{ marginBottom: '28px', textAlign: 'center' }}>
-          <h1 style={{ fontSize: '22px', fontWeight: '700', color: '#1a1a1a', margin: '0 0 8px' }}>
-            你需要哪方面的帮助？
-          </h1>
-          <p style={{ fontSize: '14px', color: '#666', margin: '0', lineHeight: '1.6' }}>
-            选择你的情况，我们提供中文全程辅助
-          </p>
+    <div style={{fontFamily:"PingFang TC,Noto Sans TC,sans-serif",minHeight:"100vh",background:"#F7F8FA"}}>
+      <div style={{background:"#1A2B4A",padding:"0 24px"}}>
+        <div style={{maxWidth:680,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:60}}>
+          <div style={{color:"#fff",fontSize:22,fontWeight:800}}>住易 <span style={{fontSize:14,color:"#7A9CC8",fontWeight:400}}>ZhuYi</span></div>
+          <div style={{fontSize:13,color:"#7A9CC8"}}>紐約華人住房福利平台</div>
         </div>
-
-        {/* 卡片网格 */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '24px' }}>
-          {cards.map(card => (
-            <div
-              key={card.id}
-              onClick={() => { if (!card.comingSoon) window.location.href = card.href }}
-              onMouseEnter={() => setHoveredId(card.id)}
-              onMouseLeave={() => setHoveredId(null)}
-              style={{
-                background: 'white',
-                borderRadius: '16px',
-                padding: '18px 16px',
-                border: hoveredId === card.id && !card.comingSoon
-                  ? `2px solid ${card.color}`
-                  : '1.5px solid #EBEBEB',
-                cursor: card.comingSoon ? 'default' : 'pointer',
-                transition: 'all 0.15s',
-                position: 'relative',
-                opacity: card.comingSoon ? 0.75 : 1,
-                boxShadow: hoveredId === card.id && !card.comingSoon
-                  ? `0 4px 16px ${card.color}20`
-                  : '0 1px 3px rgba(0,0,0,0.06)',
-              }}
-            >
-              {/* 即将上线标签 */}
-              {card.comingSoon && (
-                <div style={{
-                  position: 'absolute', top: '10px', right: '10px',
-                  background: '#F0F0F0', color: '#999',
-                  fontSize: '10px', fontWeight: '500',
-                  padding: '2px 7px', borderRadius: '10px',
-                }}>
-                  即将上线
-                </div>
-              )}
-
-              {/* 紧急提示 */}
-              {card.badge && (
-                <div style={{
-                  background: '#FFF0F0',
-                  color: '#CC2B2B',
-                  fontSize: '10px',
-                  fontWeight: '500',
-                  padding: '3px 8px',
-                  borderRadius: '6px',
-                  marginBottom: '10px',
-                  lineHeight: '1.4',
-                }}>
-                  ⚠️ {card.badge}
-                </div>
-              )}
-
-              {/* Emoji图标 */}
-              <div style={{
-                width: '40px', height: '40px',
-                background: card.bg,
-                borderRadius: '10px',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: '20px', marginBottom: '12px',
-              }}>
-                {card.emoji}
+      </div>
+      <div style={{background:"linear-gradient(160deg,#2A5A9A 0%,#1A3A6A 100%)",padding:"48px 24px 56px",textAlign:"center"}}>
+        <div style={{maxWidth:520,margin:"0 auto"}}>
+          <div style={{fontSize:15,color:"#9ABCE8",letterSpacing:2,marginBottom:14}}>深耕紐約  服務華人</div>
+          <h1 style={{fontSize:32,fontWeight:800,color:"#fff",lineHeight:1.35,marginBottom:16}}>紐約保障房福利<br/>你也可以申請到</h1>
+          <p style={{fontSize:15,color:"#9BB5D4",lineHeight:1.8}}>專為華人移民家庭設計  幫你看懂政策  測算資格  找到匹配房源</p>
+          <div style={{marginTop:14,fontSize:12,color:"rgba(255,255,255,0.45)",letterSpacing:1}}>全程中文 · 免費測算 · 2026 HUD最新數據</div>
+        </div>
+      </div>
+      <div style={{maxWidth:680,margin:"0 auto",padding:"0 20px 50px"}}>
+        <div style={{fontSize:17,color:"#8899B0",margin:"36px 0 18px",textAlign:"center",fontWeight:500}}>請選擇你的情況</div>
+        <div style={{display:"flex",flexDirection:"column",gap:16}}>
+          {CARDS.map(c=>(
+            <button key={c.href} onClick={()=>router.push(c.href)}
+              style={{background:"#fff",border:"none",borderRadius:24,padding:"30px 28px",textAlign:"left",
+                boxShadow:"0 2px 16px rgba(0,0,0,0.08)",display:"flex",alignItems:"center",gap:24,cursor:"pointer"}}>
+              <div style={{fontSize:50,flexShrink:0}}>{c.icon}</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:21,fontWeight:700,color:"#1A2B4A",marginBottom:6}}>{c.title}</div>
+                <div style={{fontSize:14,color:"#8899B0"}}>{c.sub}</div>
               </div>
-
-              {/* 标题 */}
-              <p style={{
-                fontSize: '14px', fontWeight: '600',
-                color: '#1a1a1a', margin: '0 0 6px',
-                lineHeight: '1.4',
-              }}>
-                {card.title}
-              </p>
-
-              {/* 描述 */}
-              <p style={{
-                fontSize: '12px', color: '#666',
-                margin: '0 0 12px', lineHeight: '1.5',
-              }}>
-                {card.desc}
-              </p>
-
-              {/* 功能标签 */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '14px' }}>
-                {card.tags.map(tag => (
-                  <span key={tag} style={{
-                    fontSize: '10px', padding: '2px 7px',
-                    background: card.bg, color: card.color,
-                    borderRadius: '6px', fontWeight: '500',
-                  }}>
-                    {tag}
-                  </span>
-                ))}
+              <div style={{fontSize:24,color:c.color,fontWeight:700,flexShrink:0}}>→</div>
+            </button>
+          ))}
+        </div>
+        <div style={{marginTop:28,background:"#fff",borderRadius:18,padding:"18px 22px",boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
+          <div style={{display:"flex",justifyContent:"center",textAlign:"center"}}>
+            {[["17.7萬","NYCHA公房套數"],["8.5萬","紐約市8券家庭"],["2.5萬+","接受8券房東"],["10萬+","紐約華人家庭"]].map(([num,label],i,arr)=>(
+              <div key={label} style={{flex:1,borderRight:i<arr.length-1?"1px solid #ECEEF3":"none",padding:"4px 0"}}>
+                <div style={{fontSize:20,fontWeight:800,color:"#1A2B4A"}}>{num}</div>
+                <div style={{fontSize:11,color:"#8899B0",marginTop:4}}>{label}</div>
               </div>
-
-              {/* CTA按钮 */}
-              {!card.comingSoon && (
-                <div style={{
-                  fontSize: '13px', fontWeight: '600',
-                  color: card.color,
-                  display: 'flex', alignItems: 'center', gap: '4px',
-                }}>
-                  {card.cta}
+            ))}
+          </div>
+        </div>
+        <div style={{marginTop:14,background:"#1A2B4A",borderRadius:18,padding:"18px 20px"}}>
+          <div style={{fontSize:12,color:"#7A9CC8",textAlign:"center",marginBottom:12,letterSpacing:1}}>服務收費說明</div>
+          {PRICING.map((p,i)=>(
+            <div key={p.label}>
+              {i>0&&<div style={{height:1,background:"rgba(255,255,255,0.08)",margin:"10px 0"}}/>}
+              <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
+                <div style={{display:"flex",alignItems:"flex-start",gap:10}}>
+                  <span style={{fontSize:17,marginTop:2}}>{p.icon}</span>
+                  <div>
+                    <div style={{fontSize:14,color:p.free?"#fff":"#C8D8F0",fontWeight:600}}>{p.label}</div>
+                    <div style={{fontSize:11,color:"#7A9CC8",marginTop:2}}>{p.desc}</div>
+                  </div>
                 </div>
-              )}
+                <span style={{fontSize:14,fontWeight:p.free?800:700,color:p.priceColor,whiteSpace:"nowrap"}}>{p.price}</span>
+              </div>
             </div>
           ))}
         </div>
-
-        {/* 底部信任背书 */}
-        <div style={{
-          background: 'white',
-          borderRadius: '12px',
-          padding: '16px 18px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.06)',
-        }}>
-          <div style={{ fontSize: '24px' }}>🔒</div>
-          <div>
-            <p style={{ fontSize: '13px', fontWeight: '500', color: '#333', margin: '0 0 2px' }}>
-              你的信息安全
-            </p>
-            <p style={{ fontSize: '12px', color: '#999', margin: '0', lineHeight: '1.5' }}>
-              数据加密存储 · 不出售个人信息 · 仅用于住房匹配
-            </p>
-          </div>
-        </div>
-
-        {/* 底部说明 */}
-        <p style={{
-          fontSize: '11px', color: '#bbb',
-          textAlign: 'center', margin: '20px 0 0',
-          lineHeight: '1.6',
-        }}>
-          住易 ZhuYi · 纽约华人住房福利平台<br />
-          数据来源：HUD 2025年 · NYCHA官方 · 纽约市住房局
-        </p>
+        <div style={{textAlign:"center",marginTop:18,fontSize:12,color:"#B0BBC8"}}>住易 ZhuYi · 紐約華人住房福利平台</div>
       </div>
-    </main>
-  )
+    </div>
+  );
 }
