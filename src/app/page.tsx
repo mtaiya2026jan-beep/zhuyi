@@ -2,7 +2,7 @@
 import {useRouter} from "next/navigation";
 const CARDS=[
   {icon:"🏠",title:"我想申請保障房",sub:"AMI測算  找到可申請項目",href:"/ami",color:"#1A2B4A"},
-  {icon:"🎫",title:"我有 Section 8 持券",sub:"登記持券  優先匹配華人房東",href:"/voucher",color:"#2A5A9A"},
+  {icon:"🏷️",title:"我有 Section 8 持券",sub:"登記持券  優先匹配華人房東",href:"/voucher",color:"#2A5A9A"},
   {icon:"🏘️",title:"我是華人房東",sub:"登記房源  接受持券租客",href:"/landlord",color:"#3A7A6A"},
   {icon:"📋",title:"我已經申請了",sub:"診斷進度  查看卡在哪個環節",href:"/status",color:"#7A4A9A"},
   {icon:"🏛️",title:"福利住房數據庫",sub:"三大機構房源  全美8券房東  每月更新",href:"/database",color:"#B05A00"},
