@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 const FEATURES=[
   {icon:"📋",title:"中文填表指引",desc:"逐步中文說明，每個欄位怎麼填、填什麼，不用擔心看不懂英文表格",free:false},
   {icon:"🔍",title:"自助在線申請步驟",desc:"Housing Connect、NYCHA、HCR三個平台的申請流程圖解，按步驟操作不迷路",free:false},
@@ -10,19 +11,29 @@ const FEATURES=[
   {icon:"📊",title:"AMI資格測算",desc:"輸入收入即知道你屬於哪個檔位、可申請哪些項目",free:true},
 ];
 export default function PaopaoPage(){
+  const [loading,setLoading]=useState<string|null>(null);
+  async function handleCheckout(plan:string){
+    setLoading(plan);
+    try{
+      const res=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({plan})});
+      const data=await res.json();
+      if(data.url){window.location.href=data.url;}
+      else{alert("付款頁面載入失敗，請稍後再試");setLoading(null);}
+    }catch{alert("網絡錯誤，請稍後再試");setLoading(null);}
+  }
   return (
     <div style={{fontFamily:"PingFang TC,sans-serif",minHeight:"100vh",background:"#F7F8FA"}}>
       <div style={{background:"#2A5A9A",padding:"0 24px",position:"sticky",top:0,zIndex:100}}>
         <div style={{maxWidth:680,margin:"0 auto",display:"flex",alignItems:"center",height:60,gap:14}}>
-          <a href="/" style={{color:"#9ABCE8",fontSize:24,textDecoration:"none"}}>←</a>
+          <a href="/" style={{color:"#9ABCE8",fontSize:24,textDecoration:"none",lineHeight:1}}>←</a>
           <span style={{color:"#fff",fontSize:18,fontWeight:700}}>申請陪跑計劃</span>
           <span style={{marginLeft:"auto",fontSize:13,color:"#FFD066",fontWeight:700}}>$19.9 / 月</span>
         </div>
       </div>
       <div style={{background:"linear-gradient(160deg,#2A5A9A 0%,#1A3A6A 100%)",padding:"48px 24px 56px",textAlign:"center"}}>
         <div style={{fontSize:14,color:"#9ABCE8",letterSpacing:2,marginBottom:8}}>住易 · 付費服務</div>
-        <h1 style={{margin:0,fontSize:26,fontWeight:700,color:"#fff"}}>申請全程陪你跑 一個都不漏</h1>
-        <p style={{margin:"12px 0 0",fontSize:15,color:"#9ABCE8"}}>從填表到提交 從提醒到跟進 全程中文輔助</p>
+        <h1 style={{margin:0,fontSize:26,fontWeight:700,color:"#fff",lineHeight:1.35}}>申請全程陪你跑 一個都不漏</h1>
+        <p style={{margin:"12px 0 0",fontSize:15,color:"#9ABCE8",lineHeight:1.7}}>從填表到提交 從提醒到跟進 全程中文輔助</p>
         <div style={{marginTop:20}}>
           <span style={{fontSize:36,fontWeight:800,color:"#FFD066"}}>$19.9</span>
           <span style={{fontSize:16,color:"#9ABCE8",marginLeft:4}}>/ 月</span>
@@ -42,12 +53,30 @@ export default function PaopaoPage(){
             </div>
           ))}
         </div>
-        <div style={{background:"#1A2B4A",borderRadius:20,padding:24,textAlign:"center"}}>
-          <div style={{fontSize:16,color:"#fff",fontWeight:700,marginBottom:6}}>開始30天免費試用</div>
-          <div style={{fontSize:13,color:"#9BB5D4",marginBottom:16}}>試用期結束後 $19.9/月 隨時取消</div>
-          <a href="mailto:support@zhuyi.app" style={{display:"block",padding:16,borderRadius:14,background:"linear-gradient(135deg,#FFD066 0%,#FF9A00 100%)",color:"#1A2B4A",fontSize:17,fontWeight:800,textDecoration:"none"}}>立即訂閱 開始陪跑 →</a>
-          <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginTop:10}}>安全支付 隨時取消 支持信用卡</div>
+        <div style={{background:"#1A2B4A",borderRadius:20,padding:24,textAlign:"center",marginBottom:12}}>
+          <div style={{fontSize:16,color:"#fff",fontWeight:700,marginBottom:4}}>申請陪跑計劃</div>
+          <div style={{fontSize:28,fontWeight:800,color:"#FFD066",marginBottom:4}}>$19.9<span style={{fontSize:14,color:"#9BB5D4",fontWeight:400}}> / 月</span></div>
+          <div style={{fontSize:12,color:"#9BB5D4",marginBottom:16}}>隨時取消 無需合約</div>
+          <button onClick={()=>handleCheckout("paopao_monthly")} disabled={!!loading}
+            style={{width:"100%",padding:15,borderRadius:14,border:"none",
+              background:loading==="paopao_monthly"?"#555":"linear-gradient(135deg,#FFD066 0%,#FF9A00 100%)",
+              color:"#1A2B4A",fontSize:17,fontWeight:800,cursor:loading?"not-allowed":"pointer",
+              boxShadow:"0 4px 16px rgba(255,154,0,0.4)"}}>
+            {loading==="paopao_monthly"?"處理中...":"立即訂閱 開始陪跑 →"}
+          </button>
         </div>
+        <div style={{background:"#fff",borderRadius:20,padding:24,textAlign:"center",marginBottom:12,border:"2px solid #4A8F6F"}}>
+          <div style={{fontSize:16,color:"#1A2B4A",fontWeight:700,marginBottom:4}}>年審通</div>
+          <div style={{fontSize:28,fontWeight:800,color:"#4A8F6F",marginBottom:4}}>$79<span style={{fontSize:14,color:"#8899B0",fontWeight:400}}> / 年</span></div>
+          <div style={{fontSize:12,color:"#8899B0",marginBottom:16}}>Section 8 / NYCHA 年審截止統一提醒</div>
+          <button onClick={()=>handleCheckout("annual_renewal")} disabled={!!loading}
+            style={{width:"100%",padding:13,borderRadius:12,border:"none",
+              background:loading==="annual_renewal"?"#aaa":"#4A8F6F",
+              color:"#fff",fontSize:15,fontWeight:700,cursor:loading?"not-allowed":"pointer"}}>
+            {loading==="annual_renewal"?"處理中...":"訂閱年審通 →"}
+          </button>
+        </div>
+        <div style={{textAlign:"center",fontSize:11,color:"#A0AABF",marginTop:8}}>安全支付 · Stripe加密 · 隨時取消 · 支持信用卡／借記卡</div>
       </div>
     </div>
   );
