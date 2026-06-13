@@ -20,28 +20,34 @@ export async function POST(req: NextRequest) {
       const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!,process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
       const plan = session.metadata?.plan || ''
       const isAnnual = plan === 'annual_renewal'
+      const now = new Date()
+      const end = new Date(now.getTime() + (isAnnual?365:30)*24*60*60*1000)
       await supabase.from('subscriptions').insert({
-        stripe_session_id: session.id,
         stripe_customer_id: session.customer as string || null,
-        plan,
-        amount: session.amount_total || 0,
+        stripe_price_id: plan === 'paopao_monthly' ? 'price_1Thi3JC6gUPvob2xOtMB0n6f'
+                       : plan === 'annual_renewal'  ? 'price_1Thi3KC6gUPvob2xsL1119G9'
+                       :                              'price_1Thi3KC6gUPvob2x2IBSa9Sp',
+        product_name: plan,
+        amount: (session.amount_total || 0) / 100,
+        currency: session.currency || 'usd',
+        interval: isAnnual ? 'year' : 'month',
         status: 'active',
-        customer_email: session.customer_details?.email || null,
-        customer_name: session.customer_details?.name || null,
-        period_end: new Date(Date.now() + (isAnnual?365:30)*24*60*60*1000).toISOString(),
+        current_period_start: now.toISOString(),
+        current_period_end: end.toISOString(),
       })
       console.log('[WEBHOOK] subscriptions寫入成功')
-    } catch (e: any) {
-      console.error('[WEBHOOK] DB失敗:', e.message)
-    }
+    } catch (e: any) { console.error('[WEBHOOK] DB失敗:', e.message) }
   }
 
   if (event.type === 'customer.subscription.deleted') {
     const sub = event.data.object as Stripe.Subscription
     try {
       const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!,process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
-      await supabase.from('subscriptions').update({status:'cancelled'}).eq('stripe_customer_id', sub.customer as string)
-    } catch(e:any){ console.error('[WEBHOOK] 取消更新失敗:', e.message) }
+      await supabase.from('subscriptions').update({
+        status:'cancelled',
+        canceled_at: new Date().toISOString()
+      }).eq('stripe_customer_id', sub.customer as string)
+    } catch(e:any){ console.error('[WEBHOOK] 取消失敗:', e.message) }
   }
 
   return NextResponse.json({ received: true })
