@@ -75,7 +75,14 @@ export default function Home(){
             </div>
           ))}
         </div>
-        <div style={{textAlign:"center",marginTop:18,fontSize:12,color:"#B0BBC8"}}>住易 ZhuYi · 紐約華人住房福利平台</div>
+        <div style={{background:"#2A5A9A",borderRadius:14,padding:"14px 20px",marginTop:6,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <div>
+            <div style={{fontSize:14,color:"#fff",fontWeight:700}}>申請陪跑計劃</div>
+            <div style={{fontSize:11,color:"#9ABCE8",marginTop:2}}>中文指引 · 截止提醒 · 狀態看板</div>
+          </div>
+          <a href="/paopao" style={{padding:"10px 18px",borderRadius:10,background:"linear-gradient(135deg,#FFD066,#FF9A00)",color:"#1A2B4A",fontSize:13,fontWeight:800,textDecoration:"none",whiteSpace:"nowrap"}}>$19.9/月 →</a>
+        </div>
+        <div style={{textAlign:"center",marginTop:14,fontSize:12,color:"#B0BBC8"}}>住易 ZhuYi · 紐約華人住房福利平台</div>
       </div>
     </div>
   );

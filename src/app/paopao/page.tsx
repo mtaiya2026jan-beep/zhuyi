@@ -76,7 +76,15 @@ export default function PaopaoPage(){
             {loading==="annual_renewal"?"處理中...":"訂閱年審通 →"}
           </button>
         </div>
-        <div style={{textAlign:"center",fontSize:11,color:"#A0AABF",marginTop:8}}>安全支付 · Stripe加密 · 隨時取消 · 支持信用卡／借記卡</div>
+        <div style={{textAlign:"center",fontSize:11,color:"#A0AABF",marginTop:8,marginBottom:16}}>安全支付 · Stripe加密 · 隨時取消 · 支持信用卡／借記卡</div>
+        <div style={{background:"#F0F4FA",borderRadius:16,padding:18,textAlign:"center"}}>
+          <div style={{fontSize:13,color:"#5A6A8A",marginBottom:12}}>還沒準備好？先免費使用這些工具</div>
+          <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap"}}>
+            <a href="/ami" style={{padding:"10px 18px",borderRadius:10,background:"#fff",border:"1.5px solid #D0D8E8",color:"#2A5A9A",fontSize:13,fontWeight:600,textDecoration:"none"}}>📊 AMI測算</a>
+            <a href="/status" style={{padding:"10px 18px",borderRadius:10,background:"#fff",border:"1.5px solid #D0D8E8",color:"#2A5A9A",fontSize:13,fontWeight:600,textDecoration:"none"}}>📋 申請診斷</a>
+            <a href="/" style={{padding:"10px 18px",borderRadius:10,background:"#fff",border:"1.5px solid #D0D8E8",color:"#5A6A8A",fontSize:13,fontWeight:600,textDecoration:"none"}}>← 返回首頁</a>
+          </div>
+        </div>
       </div>
     </div>
   );

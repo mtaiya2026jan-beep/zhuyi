@@ -21,10 +21,17 @@ export default function AmiPage() {
     setResult({pct, ...tier, base});
   }
   return (
-    <div style={{fontFamily:"sans-serif",minHeight:"100vh",background:"#F7F8FA",padding:"0 0 60px"}}>
-      <div style={{background:"#2A5A9A",padding:"16px 20px"}}>
-        <a href="/" style={{color:"#9ABCE8",textDecoration:"none",fontSize:20}}>← </a>
-        <span style={{color:"#fff",fontSize:18,fontWeight:700}}>保障房資格測算</span>
+    <div style={{fontFamily:"PingFang TC,sans-serif",minHeight:"100vh",background:"#F7F8FA"}}>
+      <div style={{background:"#2A5A9A",padding:"0 20px",position:"sticky",top:0,zIndex:100}}>
+        <div style={{maxWidth:680,margin:"0 auto",display:"flex",alignItems:"center",height:60,gap:14}}>
+          <a href="/" style={{color:"#9ABCE8",fontSize:24,textDecoration:"none",lineHeight:1}}>←</a>
+          <span style={{color:"#fff",fontSize:18,fontWeight:700}}>我想申請保障房</span>
+        </div>
+      </div>
+      <div style={{background:"linear-gradient(160deg,#2A5A9A 0%,#1A3A6A 100%)",padding:"48px 24px 56px",textAlign:"center"}}>
+        <div style={{fontSize:14,color:"#9ABCE8",letterSpacing:2,marginBottom:8}}>住易 · 免費工具</div>
+        <h1 style={{margin:0,fontSize:26,fontWeight:700,color:"#fff",lineHeight:1.35}}>申請保障房　第一步先測AMI</h1>
+        <p style={{margin:"12px 0 0",fontSize:15,color:"#9ABCE8",lineHeight:1.7}}>測出AMI檔位 → 查看可申請項目 → 訂閱解鎖房源詳情</p>
       </div>
       <div style={{maxWidth:600,margin:"0 auto",padding:"24px 16px"}}>
         <div style={{background:"#fff",borderRadius:16,padding:24,marginBottom:20,boxShadow:"0 2px 12px rgba(0,0,0,0.07)"}}>
