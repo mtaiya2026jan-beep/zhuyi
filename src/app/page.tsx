@@ -8,10 +8,10 @@ const CARDS=[
   {icon:"🏛️",title:"福利住房數據庫",sub:"三大機構房源  全美8券房東  每月更新",href:"/database",color:"#B05A00"},
 ];
 const PRICING=[
-  {icon:"🆓",label:"AMI資格測算",desc:"輸入收入即知道你屬於哪個檔位、可申請哪些項目",price:"永久免費",priceColor:"#4AE89A",free:true},
-  {icon:"📋",label:"申請全程指引",desc:"中文填表指導、文件清單、截止日提醒、申請狀態追蹤",price:"$19.9 / 月",priceColor:"#FFD066",free:false},
+  {icon:"🆓",label:"AMI資格測算",desc:"輸入收入即知你屬於哪個檔位、Housing Connect 可申請哪些項目",price:"永久免費",priceColor:"#4AE89A",free:true},
+  {icon:"📋",label:"住房全程陪跑",desc:"Housing Connect 個性化追蹤、中文填表指引、截止日提醒、延期申請模板",price:"$19.9 / 月",priceColor:"#FFD066",free:false},
   {icon:"📅",label:"年審截止日提醒",desc:"Section 8 年審截止、Housing Connect 抽籤到期，統一管理不漏接",price:"$79 / 年",priceColor:"#FFD066",free:false},
-  {icon:"🤝",label:"持券成功找房撮合",desc:"為持券人配對接受 Section 8 的華人房東，簽約後一次性收費",price:"$1,400 / 單",priceColor:"#FFD066",free:false},
+  {icon:"🤝",label:"持券成功找房撮合",desc:"住易代表房東方配對接受 Section 8 的華人家庭，費用由房東承擔",price:"$1,400 / 單",priceColor:"#FFD066",free:false},
 ];
 export default function Home(){
   const router=useRouter();
@@ -77,7 +77,7 @@ export default function Home(){
         </div>
         <div style={{background:"#2A5A9A",borderRadius:14,padding:"14px 20px",marginTop:6,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div>
-            <div style={{fontSize:14,color:"#fff",fontWeight:700}}>申請陪跑計劃</div>
+            <div style={{fontSize:14,color:"#fff",fontWeight:700}}>住房全程陪跑</div>
             <div style={{fontSize:11,color:"#9ABCE8",marginTop:2}}>中文指引 · 截止提醒 · 狀態看板</div>
           </div>
           <a href="/pricing" style={{padding:"10px 18px",borderRadius:10,background:"linear-gradient(135deg,#FFD066,#FF9A00)",color:"#1A2B4A",fontSize:13,fontWeight:800,textDecoration:"none",whiteSpace:"nowrap"}}>$19.9/月 →</a>
