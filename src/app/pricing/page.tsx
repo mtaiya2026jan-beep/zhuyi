@@ -1,22 +1,23 @@
 "use client";
-import { useState } from "react";
+import {useState} from "react";
 
 const PLANS = [
   {
-    id: "free",
-    name: "免費版",
-    nameEn: "FREE",
-    price: "免費",
-    priceSub: "永久免費",
-    color: "#5A6A8A",
-    border: "#D0D8E8",
-    btnBg: "#F4F6FB",
-    btnColor: "#5A6A8A",
-    btnText: "免費使用",
-    btnHref: "/ami",
-    highlight: false,
-    tag: "",
-    features: [
+    id:"free",
+    name:"免費版",
+    nameEn:"FREE",
+    price:"$0",
+    priceSub:"永久免費",
+    valueMsg:"基礎工具，隨時可用",
+    color:"#5A6A8A",
+    border:"#D0D8E8",
+    btnBg:"#F4F6FB",
+    btnColor:"#5A6A8A",
+    btnText:"免費使用",
+    btnHref:"/ami",
+    highlight:false,
+    tag:"",
+    features:[
       {text:"AMI收入資格測算",ok:true},
       {text:"HUD 2026年最新數據",ok:true},
       {text:"五個收入檔位對照表",ok:true},
@@ -30,20 +31,21 @@ const PLANS = [
     ],
   },
   {
-    id: "paopao_monthly",
-    name: "申請陪跑",
-    nameEn: "STARTER",
-    price: "$19.9",
-    priceSub: "/ 月，隨時取消",
-    color: "#2A5A9A",
-    border: "#2A5A9A",
-    btnBg: "linear-gradient(135deg,#2A5A9A,#1A3A6A)",
-    btnColor: "#fff",
-    btnText: "立即訂閱",
-    btnHref: null,
-    highlight: false,
-    tag: "",
-    features: [
+    id:"paopao_monthly",
+    name:"申請陪跑",
+    nameEn:"STARTER",
+    price:"$19.9",
+    priceSub:"/ 月，隨時取消",
+    valueMsg:"每天不到 $0.67，全程中文陪跑",
+    color:"#2A5A9A",
+    border:"#2A5A9A",
+    btnBg:"linear-gradient(135deg,#2A5A9A,#1A3A6A)",
+    btnColor:"#fff",
+    btnText:"立即訂閱",
+    btnHref:null,
+    highlight:true,
+    tag:"最受歡迎",
+    features:[
       {text:"AMI收入資格測算",ok:true},
       {text:"HUD 2026年最新數據",ok:true},
       {text:"五個收入檔位對照表",ok:true},
@@ -53,65 +55,63 @@ const PLANS = [
       {text:"截止日集中提醒",ok:true},
       {text:"申請狀態統一看板",ok:true},
       {text:"文件清單自動生成",ok:true},
-      {text:"優先房東匹配",ok:false},
+      {text:"延期申請信中文模板",ok:true},
     ],
   },
   {
-    id: "annual_renewal",
-    name: "年審通",
-    nameEn: "PRO",
-    price: "$79",
-    priceSub: "/ 年，約$6.6/月",
-    color: "#4A8F6F",
-    border: "#4A8F6F",
-    btnBg: "linear-gradient(135deg,#4A8F6F,#2A6A4F)",
-    btnColor: "#fff",
-    btnText: "訂閱年審通",
-    btnHref: null,
-    highlight: true,
-    tag: "最受歡迎",
-    features: [
+    id:"matching",
+    name:"持券撮合",
+    nameEn:"MATCH",
+    price:"$1,400",
+    priceSub:"/ 單，找到房才付",
+    valueMsg:"成功找到房東才收費，零風險",
+    color:"#1A6A3A",
+    border:"#1A6A3A",
+    btnBg:"#F0FAF4",
+    btnColor:"#1A6A3A",
+    btnText:"登記需求",
+    btnHref:"/voucher",
+    highlight:false,
+    tag:"",
+    note:"※ 費用由房東承擔，持券人無需支付",
+    features:[
       {text:"AMI收入資格測算",ok:true},
-      {text:"HUD 2026年最新數據",ok:true},
-      {text:"五個收入檔位對照表",ok:true},
-      {text:"各區NYCHA/HPD房源數量",ok:true},
-      {text:"申請狀態診斷（完整版）",ok:true},
-      {text:"中文填表指引（逐欄說明）",ok:true},
-      {text:"截止日集中提醒（全年）",ok:true},
-      {text:"申請狀態統一看板",ok:true},
-      {text:"文件清單自動生成",ok:true},
-      {text:"優先房東匹配（一次）",ok:true},
+      {text:"專屬顧問一對一服務",ok:true},
+      {text:"匹配接受Section 8的華人房東",ok:true},
+      {text:"代辦NYCHA租房申請包",ok:true},
+      {text:"全程中英文溝通協助",ok:true},
+      {text:"簽約後一次性收費",ok:true},
+      {text:"不成功不收費",ok:true},
+      {text:"費用由房東方承擔",ok:true},
     ],
   },
 ];
 
 const FAQS = [
-  {q:"可以隨時取消嗎？",a:"可以。訂閱計劃隨時取消，取消後當期結束前仍可使用，不會繼續扣款。"},
-  {q:"支持哪些付款方式？",a:"支持Visa、Mastercard、American Express等信用卡及借記卡，通過Stripe安全加密處理。"},
-  {q:"首月免費優惠碼怎麼用？",a:"在Stripe付款頁面點擊「添加促銷碼」，輸入 ZHUYI100 即可享受首月免費。限用100次。"},
-  {q:"免費版和付費版有什麼區別？",a:"免費版可使用AMI測算和基礎診斷。付費版增加中文填表指引、截止日提醒、申請狀態看板和文件清單功能。"},
+  {q:"免費版和陪跑版有什麼區別？",a:"免費版提供基礎查詢工具。陪跑版增加中文填表指引、截止日提醒、延期申請模板等全程服務，適合正在積極找房的持券人。"},
+  {q:"撮合服務為什麼由房東付費？",a:"根據紐約市 FARE Act（2025年6月生效），房東雇用的經紀人不得向租客收取費用。住易代表房東方進行匹配，費用依法由房東承擔，持券人無需支付任何撮合費。"},
+  {q:"陪跑服務可以隨時取消嗎？",a:"可以，隨時取消，不收違約金。取消後當月服務繼續有效至週期結束。"},
+  {q:"撮合服務需要多久能找到房東？",a:"視乎持券人的條件和目標區域，通常2-8週。緊急個案（30天內到期）會優先處理。"},
+  {q:"Section 8 券已超過180天還能用嗎？",a:"可以申請延期（Reasonable Accommodation），NYCHA逐案審批，無固定上限。陪跑訂閱用戶可獲延期申請中文指引及英文信件模板。"},
 ];
 
-export default function PricingPage() {
-  const [loading, setLoading] = useState<string|null>(null);
-  const [toast, setToast] = useState("");
+export default function PricingPage(){
+  const [openFaq,setOpenFaq]=useState<number|null>(null);
+  const [checkoutLoading,setCheckoutLoading]=useState(false);
 
-  function showToast(m:string){setToast(m);setTimeout(()=>setToast(""),3000);}
-
-  async function handleCheckout(plan:string){
-    setLoading(plan);
+  async function handleCheckout(priceId:string){
+    setCheckoutLoading(true);
     try{
-      const res=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({plan})});
+      const res=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({priceId})});
       const data=await res.json();
-      if(data.url){window.location.href=data.url;}
-      else{showToast("付款頁面載入失敗，請稍後再試");setLoading(null);}
-    }catch{showToast("網絡錯誤，請稍後再試");setLoading(null);}
+      if(data.url) window.location.href=data.url;
+    }catch(e){console.error(e);}
+    finally{setCheckoutLoading(false);}
   }
 
-  return (
+  return(
     <div style={{fontFamily:"PingFang TC,sans-serif",minHeight:"100vh",background:"#F7F8FA"}}>
-      {toast&&<div style={{position:"fixed",bottom:30,left:"50%",transform:"translateX(-50%)",background:"#1A2B4A",color:"#fff",padding:"10px 20px",borderRadius:20,fontSize:13,zIndex:9999}}>{toast}</div>}
-
+      {/* 頂欄 */}
       <div style={{background:"#2A5A9A",padding:"0 20px",position:"sticky",top:0,zIndex:100}}>
         <div style={{maxWidth:960,margin:"0 auto",display:"flex",alignItems:"center",height:60,gap:14}}>
           <a href="/" style={{color:"#9ABCE8",fontSize:24,textDecoration:"none",lineHeight:1}}>←</a>
@@ -119,10 +119,11 @@ export default function PricingPage() {
         </div>
       </div>
 
+      {/* Hero */}
       <div style={{background:"linear-gradient(160deg,#2A5A9A 0%,#1A3A6A 100%)",padding:"48px 24px 56px",textAlign:"center"}}>
         <div style={{fontSize:14,color:"#9ABCE8",letterSpacing:2,marginBottom:8}}>住易 · 透明定價</div>
         <h1 style={{margin:0,fontSize:28,fontWeight:800,color:"#fff",lineHeight:1.35}}>選擇適合你的方案</h1>
-        <p style={{margin:"12px 0 16px",fontSize:15,color:"#9ABCE8",lineHeight:1.7}}>從免費測算到全程陪跑  隨時升級  隨時取消</p>
+        <p style={{margin:"12px 0 16px",fontSize:15,color:"#9ABCE8",lineHeight:1.7}}>從免費測算到全程陪跑　隨時升級　隨時取消</p>
         <div style={{display:"inline-block",background:"rgba(255,208,102,0.15)",border:"1px solid rgba(255,208,102,0.4)",borderRadius:20,padding:"7px 18px",fontSize:13,color:"#FFD066",fontWeight:600}}>
           🎁 首月免費優惠碼：ZHUYI100
         </div>
@@ -130,7 +131,7 @@ export default function PricingPage() {
 
       <div style={{maxWidth:960,margin:"0 auto",padding:"32px 20px 60px"}}>
 
-        {/* 三欄定價 */}
+        {/* 三個方案 */}
         <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:16,marginBottom:20}}>
           {PLANS.map(plan=>(
             <div key={plan.id} style={{
@@ -146,75 +147,94 @@ export default function PricingPage() {
               )}
               <div style={{padding:"24px 20px 16px",flex:1,display:"flex",flexDirection:"column"}}>
                 <div style={{fontSize:11,color:plan.color,fontWeight:800,letterSpacing:3,marginBottom:6}}>{plan.nameEn}</div>
-                <div style={{fontSize:22,fontWeight:800,color:"#1A2B4A",marginBottom:16}}>{plan.name}</div>
-                <div style={{paddingBottom:18,marginBottom:18,borderBottom:"1px solid #F0F3F8"}}>
-                  <span style={{fontSize:38,fontWeight:800,color:plan.color}}>{plan.price}</span>
-                  <div style={{fontSize:12,color:"#8899B0",marginTop:4}}>{plan.priceSub}</div>
+                <div style={{fontSize:22,fontWeight:800,color:"#1A2B4A",marginBottom:4}}>{plan.name}</div>
+
+                {/* 價格 */}
+                <div style={{paddingBottom:16,marginBottom:16,borderBottom:"1px solid #F0F3F8"}}>
+                  <div style={{display:"flex",alignItems:"baseline",gap:4,marginBottom:4}}>
+                    <span style={{fontSize:32,fontWeight:800,color:plan.color}}>{plan.price}</span>
+                    <span style={{fontSize:13,color:"#8A9AB0"}}>{plan.priceSub}</span>
+                  </div>
+                  <div style={{fontSize:12,color:"#5A7A5A",background:"#F0FAF0",borderRadius:6,padding:"4px 8px",display:"inline-block"}}>
+                    💡 {plan.valueMsg}
+                  </div>
+                  {"note" in plan && plan.note&&(
+                    <div style={{fontSize:11,color:"#1A6A3A",marginTop:6,fontWeight:600}}>{plan.note as string}</div>
+                  )}
                 </div>
-                <div style={{flex:1}}>
+
+                {/* 功能列表 */}
+                <div style={{flex:1,display:"flex",flexDirection:"column",gap:8,marginBottom:20}}>
                   {plan.features.map((f,i)=>(
-                    <div key={i} style={{display:"flex",gap:8,marginBottom:9,alignItems:"flex-start"}}>
-                      <span style={{fontSize:13,color:f.ok?plan.color:"#D0D8E8",flexShrink:0,fontWeight:700,marginTop:1}}>{f.ok?"✓":"✗"}</span>
-                      <span style={{fontSize:13,color:f.ok?"#2A3A5A":"#B0BBC8",lineHeight:1.5}}>{f.text}</span>
+                    <div key={i} style={{display:"flex",gap:8,alignItems:"flex-start"}}>
+                      <span style={{fontSize:14,color:f.ok?plan.color:"#CDD0D8",marginTop:1,flexShrink:0}}>{f.ok?"✓":"✗"}</span>
+                      <span style={{fontSize:13,color:f.ok?"#2A3A5A":"#A0AABF",lineHeight:1.5}}>{f.text}</span>
                     </div>
                   ))}
                 </div>
-                <div style={{marginTop:20}}>
-                  {plan.btnHref?(
-                    <a href={plan.btnHref} style={{
-                      display:"block",padding:"13px",borderRadius:12,
-                      background:plan.btnBg,color:plan.btnColor,
-                      fontSize:15,fontWeight:700,textAlign:"center",textDecoration:"none",
-                    }}>{plan.btnText}</a>
-                  ):(
-                    <button onClick={()=>handleCheckout(plan.id)} disabled={!!loading}
-                      style={{
-                        width:"100%",padding:"13px",borderRadius:12,border:"none",
-                        background:loading===plan.id?"#aaa":plan.btnBg,
-                        color:plan.btnColor,fontSize:15,fontWeight:700,
-                        cursor:loading?"not-allowed":"pointer",
-                      }}>
-                      {loading===plan.id?"處理中...":plan.btnText}
-                    </button>
-                  )}
-                </div>
+
+                {/* 按鈕 */}
+                {plan.btnHref?(
+                  <a href={plan.btnHref}
+                    style={{display:"block",textAlign:"center",padding:"13px",borderRadius:12,
+                      background:plan.btnBg,color:plan.btnColor,fontSize:15,fontWeight:700,
+                      textDecoration:"none",border:`1.5px solid ${plan.border}`}}>
+                    {plan.btnText}
+                  </a>
+                ):(
+                  <button
+                    onClick={()=>handleCheckout("price_1Thi3JC6gUPvob2xOtMB0n6f")}
+                    disabled={checkoutLoading}
+                    style={{width:"100%",padding:"13px",borderRadius:12,border:"none",
+                      background:plan.btnBg,color:plan.btnColor,fontSize:15,fontWeight:700,
+                      cursor:"pointer"}}>
+                    {checkoutLoading?"處理中...":plan.btnText}
+                  </button>
+                )}
               </div>
             </div>
           ))}
         </div>
 
-        {/* 撮合佣金 */}
-        <div style={{background:"#fff",borderRadius:20,padding:"22px 24px",border:"1.5px solid #D0D8E8",marginBottom:24}}>
-          <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:16}}>
-            <div style={{flex:1}}>
-              <div style={{fontSize:11,color:"#B05A00",fontWeight:800,letterSpacing:3,marginBottom:6}}>ADD-ON</div>
-              <div style={{fontSize:18,fontWeight:800,color:"#1A2B4A",marginBottom:6}}>🤝 持券成功找房撮合</div>
-              <div style={{fontSize:13,color:"#6A7A9A",lineHeight:1.7}}>
-                住易為Section 8持券人配對接受8券的華人房東<br/>
-                成功簽約後一次性收費 · 不成功不收費
+        {/* 三個使用場景說明 */}
+        <div style={{background:"#fff",borderRadius:20,padding:"24px",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",marginBottom:20}}>
+          <div style={{fontSize:15,fontWeight:700,color:"#1A2B4A",marginBottom:16}}>📍 三個方案對應三個階段</div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12}}>
+            {[
+              {icon:"🔍",stage:"找房階段",plan:"陪跑 $19.9/月",desc:"手持有效券，正在找接受Section 8的房東，需要中文指引和截止日提醒"},
+              {icon:"🤝",stage:"急需撮合",plan:"撮合 $1,400/單",desc:"自己找不到願意接受Section 8的房東，需要住易直接幫你配對，費用由房東承擔"},
+              {icon:"🏠",stage:"已入住後",plan:"年審通 $79/年",desc:"已成功租到房，需要年審截止提醒和Housing Connect抽籤通知"},
+            ].map((s,i)=>(
+              <div key={i} style={{background:"#F7F8FA",borderRadius:12,padding:"16px"}}>
+                <div style={{fontSize:24,marginBottom:8}}>{s.icon}</div>
+                <div style={{fontSize:13,fontWeight:700,color:"#1A2B4A",marginBottom:4}}>{s.stage}</div>
+                <div style={{fontSize:12,color:"#2A5A9A",fontWeight:600,marginBottom:6}}>{s.plan}</div>
+                <div style={{fontSize:12,color:"#5A6A8A",lineHeight:1.6}}>{s.desc}</div>
               </div>
-            </div>
-            <div style={{textAlign:"center",flexShrink:0}}>
-              <div style={{fontSize:32,fontWeight:800,color:"#B05A00"}}>$1,400</div>
-              <div style={{fontSize:12,color:"#8899B0",marginBottom:10}}>成功簽約後收取</div>
-              <a href="/voucher" style={{display:"inline-block",padding:"10px 20px",borderRadius:10,background:"#B05A00",color:"#fff",fontSize:13,fontWeight:700,textDecoration:"none"}}>登記找房 →</a>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* 常見問題 */}
-        <div style={{fontSize:17,fontWeight:700,color:"#1A2B4A",marginBottom:14,textAlign:"center"}}>常見問題</div>
-        {FAQS.map((item,i)=>(
-          <div key={i} style={{background:"#fff",borderRadius:14,padding:"16px 18px",marginBottom:8,border:"1px solid #ECEEF3"}}>
-            <div style={{fontSize:14,fontWeight:700,color:"#1A2B4A",marginBottom:5}}>Q: {item.q}</div>
-            <div style={{fontSize:13,color:"#5A6A8A",lineHeight:1.7}}>A: {item.a}</div>
-          </div>
-        ))}
-
-        <div style={{textAlign:"center",fontSize:11,color:"#A0AABF",marginTop:20}}>
-          安全支付 · Stripe加密 · 住易 ZhuYi · 紐約華人住房福利平台
+        {/* FAQ */}
+        <div style={{background:"#fff",borderRadius:20,padding:"24px",boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
+          <div style={{fontSize:15,fontWeight:700,color:"#1A2B4A",marginBottom:16}}>❓ 常見問題</div>
+          {FAQS.map((faq,i)=>(
+            <div key={i} style={{borderBottom:i<FAQS.length-1?"1px solid #F0F3F8":"none"}}>
+              <button
+                onClick={()=>setOpenFaq(openFaq===i?null:i)}
+                style={{width:"100%",textAlign:"left",padding:"14px 0",background:"none",border:"none",cursor:"pointer",
+                  display:"flex",justifyContent:"space-between",alignItems:"center",gap:12}}>
+                <span style={{fontSize:14,fontWeight:600,color:"#1A2B4A",lineHeight:1.5}}>{faq.q}</span>
+                <span style={{fontSize:18,color:"#8A9AB0",flexShrink:0}}>{openFaq===i?"−":"+"}</span>
+              </button>
+              {openFaq===i&&(
+                <div style={{fontSize:13,color:"#2A3A5A",lineHeight:1.8,paddingBottom:14}}>{faq.a}</div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
+      <div style={{textAlign:"center",fontSize:11,color:"#A0AABF",paddingBottom:32}}>住易 ZhuYi · 紐約華人住房福利平台</div>
     </div>
   );
 }
