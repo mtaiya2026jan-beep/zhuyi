@@ -204,11 +204,11 @@ export default function DatabasePage(){
         {/* 陪跑CTA */}
         <div style={{background:"#1A2B4A",borderRadius:16,padding:"20px",marginTop:20,textAlign:"center"}}>
           <div style={{fontSize:15,fontWeight:700,color:"#fff",marginBottom:6}}>需要中文填表指引？</div>
-          <div style={{fontSize:13,color:"#9ABCE8",marginBottom:14,lineHeight:1.6}}>陪跑訂閱用戶可獲每週個性化房源推送<br/>以及逐欄中文填表說明，避免因填錯被拒</div>
+          <div style={{fontSize:13,color:"#9ABCE8",marginBottom:14,lineHeight:1.6}}>基礎陪跑用戶可獲每週個性化房源推送及中文填表說明<br/>全程陪跑用戶額外享有優先房東匹配及申請包代辦服務</div>
           <a href="/paopao" style={{display:"inline-block",padding:"11px 28px",borderRadius:10,
             background:"linear-gradient(135deg,#FFD066,#FFA500)",color:"#1A2B4A",
             fontSize:14,fontWeight:700,textDecoration:"none"}}>
-            訂閱陪跑 $19.9/月 →
+            基礎陪跑 $19.9/月　全程陪跑 $49.9/月 →
           </a>
         </div>
       </div>

@@ -26,7 +26,7 @@ export default function PaopaoPage(){
       <div style={{background:"#2A5A9A",padding:"0 24px",position:"sticky",top:0,zIndex:100}}>
         <div style={{maxWidth:680,margin:"0 auto",display:"flex",alignItems:"center",height:60,gap:14}}>
           <a href="/" style={{color:"#9ABCE8",fontSize:24,textDecoration:"none",lineHeight:1}}>←</a>
-          <span style={{color:"#fff",fontSize:18,fontWeight:700}}>申請陪跑計劃</span>
+          <span style={{color:"#fff",fontSize:18,fontWeight:700}}>住房全程陪跑計劃</span>
           <span style={{marginLeft:"auto",fontSize:13,color:"#FFD066",fontWeight:700}}>$19.9 / 月</span>
         </div>
       </div>
@@ -54,7 +54,7 @@ export default function PaopaoPage(){
           ))}
         </div>
         <div style={{background:"#1A2B4A",borderRadius:20,padding:24,textAlign:"center",marginBottom:12}}>
-          <div style={{fontSize:16,color:"#fff",fontWeight:700,marginBottom:4}}>申請陪跑計劃</div>
+          <div style={{fontSize:16,color:"#fff",fontWeight:700,marginBottom:4}}>住房全程陪跑計劃</div>
           <div style={{fontSize:28,fontWeight:800,color:"#FFD066",marginBottom:4}}>$19.9<span style={{fontSize:14,color:"#9BB5D4",fontWeight:400}}> / 月</span></div>
           <div style={{fontSize:12,color:"#9BB5D4",marginBottom:16}}>隨時取消 無需合約</div>
           <button onClick={()=>handleCheckout("paopao_monthly")} disabled={!!loading}
