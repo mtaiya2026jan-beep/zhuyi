@@ -1,6 +1,22 @@
 "use client";
 import {useState} from "react";
 
+const BASIC_FEATURES = [
+  "AMI收入資格測算",
+  "Housing Connect 房源查閱",
+  "個性化房源每週推送",
+  "中文填表指引（逐欄說明）",
+  "截止日集中提醒",
+  "延期申請信通用模板",
+];
+
+const PRO_EXTRA = [
+  "AI申請材料審核（提交前檢查）",
+  "個性化延期申請信自動生成",
+  "優先房東匹配服務",
+  "24小時AI中文住房助手",
+];
+
 const PLANS = [
   {
     id:"free",
@@ -21,15 +37,16 @@ const PLANS = [
     features:[
       {text:"AMI收入資格測算",ok:true},
       {text:"Housing Connect 房源查閱",ok:true},
-      {text:"HUD 2026年最新數據",ok:true},
-      {text:"各區NYCHA/HPD房源數量",ok:true},
       {text:"申請狀態診斷（基礎版）",ok:true},
       {text:"個性化房源每週推送",ok:false},
       {text:"中文填表指引",ok:false},
-      {text:"截止日集中提醒",ok:false},
-      {text:"延期申請信模板",ok:false},
-      {text:"優先房東匹配服務",ok:false},
+      {text:"截止日提醒",ok:false},
+      {text:"延期申請信",ok:false},
+      {text:"AI材料審核 / 住房助手",ok:false},
+      {text:"優先房東匹配",ok:false},
     ],
+    extraLabel:null,
+    extra:[],
   },
   {
     id:"paopao_basic",
@@ -37,7 +54,7 @@ const PLANS = [
     nameEn:"BASIC",
     price:"$19.9",
     priceSub:"/ 月，隨時取消",
-    valueMsg:"每天不到 $0.67，住房全程指引",
+    valueMsg:"每天不到 $0.67",
     color:"#2A5A9A",
     border:"#2A5A9A",
     btnBg:"linear-gradient(135deg,#2A5A9A,#1A3A6A)",
@@ -47,18 +64,9 @@ const PLANS = [
     highlight:false,
     tag:"",
     priceId:"price_1Thi3JC6gUPvob2xOtMB0n6f",
-    features:[
-      {text:"AMI收入資格測算",ok:true},
-      {text:"Housing Connect 房源查閱",ok:true},
-      {text:"HUD 2026年最新數據",ok:true},
-      {text:"各區NYCHA/HPD房源數量",ok:true},
-      {text:"申請狀態診斷（完整版）",ok:true},
-      {text:"個性化房源每週推送",ok:true},
-      {text:"中文填表指引（逐欄說明）",ok:true},
-      {text:"截止日集中提醒",ok:true},
-      {text:"延期申請信中文模板",ok:true},
-      {text:"優先房東匹配服務",ok:false},
-    ],
+    features: BASIC_FEATURES.map(t=>({text:t,ok:true})),
+    extraLabel:null,
+    extra:[],
   },
   {
     id:"paopao_pro",
@@ -66,7 +74,7 @@ const PLANS = [
     nameEn:"PRO",
     price:"$49.9",
     priceSub:"/ 月，隨時取消",
-    valueMsg:"含優先房東匹配，全程住房顧問服務",
+    valueMsg:"含AI審核+房東匹配+住房助手",
     color:"#1A6A3A",
     border:"#1A6A3A",
     btnBg:"linear-gradient(135deg,#1A6A3A,#0A4A2A)",
@@ -76,18 +84,9 @@ const PLANS = [
     highlight:true,
     tag:"最完整",
     priceId:"price_1Thi3KC6gUPvob2x2IBSa9Sp",
-    features:[
-      {text:"AMI收入資格測算",ok:true},
-      {text:"Housing Connect 房源查閱",ok:true},
-      {text:"HUD 2026年最新數據",ok:true},
-      {text:"各區NYCHA/HPD房源數量",ok:true},
-      {text:"申請狀態診斷（完整版）",ok:true},
-      {text:"個性化房源每週推送",ok:true},
-      {text:"中文填表指引（逐欄說明）",ok:true},
-      {text:"截止日集中提醒",ok:true},
-      {text:"延期申請信中文模板",ok:true},
-      {text:"優先房東匹配（住房顧問服務）",ok:true},
-    ],
+    features: BASIC_FEATURES.map(t=>({text:t,ok:true})),
+    extraLabel:"額外加上：",
+    extra: PRO_EXTRA.map(t=>({text:t,ok:true})),
   },
   {
     id:"annual",
@@ -109,21 +108,19 @@ const PLANS = [
       {text:"Section 8 年審截止提醒",ok:true},
       {text:"Housing Connect 抽籤到期通知",ok:true},
       {text:"提前30天預警",ok:true},
-      {text:"中文提醒短訊/郵件",ok:true},
-      {text:"個性化房源每週推送",ok:false},
-      {text:"中文填表指引",ok:false},
-      {text:"截止日集中提醒",ok:false},
-      {text:"優先房東匹配服務",ok:false},
+      {text:"中文提醒郵件",ok:true},
     ],
+    extraLabel:null,
+    extra:[],
   },
 ];
 
 const FAQS = [
-  {q:"免費版和陪跑版有什麼區別？",a:"免費版提供基礎查詢工具。陪跑版增加中文填表指引、截止日提醒、延期申請模板等全程服務，適合正在積極找房的持券人。"},
-  {q:"全程陪跑的房東匹配是什麼服務？",a:"住易全程陪跑提供住房顧問服務，其中包含優先房東匹配——住易顧問會主動聯絡住易合作房東，協助安排看房及NYCHA申請包代辦。此為顧問服務，費用已包含在月費中。"},
-  {q:"陪跑服務可以隨時取消嗎？",a:"可以，隨時取消，不收違約金。取消後當月服務繼續有效至週期結束。"},
-  {q:"年審通和陪跑有什麼不同？",a:"年審通針對已成功租到保障房的家庭，主要功能是年審截止和抽籤到期提醒，防止因漏接通知而失去資格。陪跑套餐針對仍在找房階段的持券人。"},
-  {q:"Section 8 券已超過180天還能用嗎？",a:"可以申請延期（Reasonable Accommodation），NYCHA逐案審批，無固定上限。陪跑訂閱用戶可獲延期申請中文指引及英文信件模板。"},
+  {q:"基礎和全程陪跑差在哪裡？",a:"基礎陪跑提供追蹤、提醒、指引等自助工具。全程陪跑額外提供AI申請材料審核、個性化延期申請信自動生成、優先房東匹配，以及24小時AI住房助手，適合需要更多支援的持券人。"},
+  {q:"AI申請材料審核怎麼運作？",a:"你提交申請材料前，上傳至住易系統，AI會根據Housing Connect或NYCHA的要求逐項檢查，指出缺漏或格式問題。最終提交由你本人確認，住易提供參考性建議。"},
+  {q:"延期申請信是什麼？",a:"Section 8券超過120天未找到房源，可向NYCHA申請Reasonable Accommodation延期。住易系統根據你登記的個人情況自動生成個性化英文申請信，你下載打印簽名提交即可。"},
+  {q:"年審通和陪跑有什麼不同？",a:"年審通針對已成功租到保障房的家庭，功能是年審截止和抽籤到期提醒。陪跑套餐針對仍在找房的持券人。"},
+  {q:"可以隨時取消嗎？",a:"可以，月費套餐隨時取消，不收違約金。取消後當月服務繼續有效至週期結束。"},
 ];
 
 export default function PricingPage(){
@@ -148,6 +145,7 @@ export default function PricingPage(){
           <span style={{color:"#fff",fontSize:18,fontWeight:700}}>服務與定價</span>
         </div>
       </div>
+
       <div style={{background:"linear-gradient(160deg,#2A5A9A 0%,#1A3A6A 100%)",padding:"48px 24px 56px",textAlign:"center"}}>
         <div style={{fontSize:14,color:"#9ABCE8",letterSpacing:2,marginBottom:8}}>住易 · 透明定價</div>
         <h1 style={{margin:0,fontSize:28,fontWeight:800,color:"#fff",lineHeight:1.35}}>選擇適合你的方案</h1>
@@ -160,12 +158,10 @@ export default function PricingPage(){
       <div style={{maxWidth:1060,margin:"0 auto",padding:"32px 20px 60px"}}>
         <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14,marginBottom:20}}>
           {PLANS.map(plan=>(
-            <div key={plan.id} style={{
-              background:"#fff",borderRadius:20,overflow:"hidden",
+            <div key={plan.id} style={{background:"#fff",borderRadius:20,overflow:"hidden",
               border:`2px solid ${plan.highlight?plan.color:"#ECEEF3"}`,
               boxShadow:plan.highlight?`0 8px 32px ${plan.color}25`:"0 2px 12px rgba(0,0,0,0.06)",
-              display:"flex",flexDirection:"column",
-            }}>
+              display:"flex",flexDirection:"column"}}>
               {plan.tag&&(
                 <div style={{background:plan.color,color:"#fff",textAlign:"center",padding:"7px",fontSize:12,fontWeight:700,letterSpacing:1}}>
                   ⭐ {plan.tag}
@@ -173,9 +169,9 @@ export default function PricingPage(){
               )}
               <div style={{padding:"24px 18px 16px",flex:1,display:"flex",flexDirection:"column"}}>
                 <div style={{fontSize:11,color:plan.color,fontWeight:800,letterSpacing:3,marginBottom:6}}>{plan.nameEn}</div>
-                <div style={{fontSize:20,fontWeight:800,color:"#1A2B4A",marginBottom:4}}>{plan.name}</div>
+                <div style={{fontSize:20,fontWeight:800,color:"#1A2B4A",marginBottom:12}}>{plan.name}</div>
                 <div style={{paddingBottom:14,marginBottom:14,borderBottom:"1px solid #F0F3F8"}}>
-                  <div style={{display:"flex",alignItems:"baseline",gap:4,marginBottom:4}}>
+                  <div style={{display:"flex",alignItems:"baseline",gap:4,marginBottom:6}}>
                     <span style={{fontSize:28,fontWeight:800,color:plan.color}}>{plan.price}</span>
                     <span style={{fontSize:12,color:"#8A9AB0"}}>{plan.priceSub}</span>
                   </div>
@@ -183,21 +179,33 @@ export default function PricingPage(){
                     💡 {plan.valueMsg}
                   </div>
                 </div>
+
                 <div style={{flex:1,display:"flex",flexDirection:"column",gap:7,marginBottom:18}}>
                   {plan.features.map((f,i)=>(
                     <div key={i} style={{display:"flex",gap:7,alignItems:"flex-start"}}>
-                      <span style={{fontSize:13,color:f.ok?plan.color:"#CDD0D8",marginTop:1,flexShrink:0}}>{f.ok?"✓":"✗"}</span>
-                      <span style={{fontSize:12,color:f.ok?"#2A3A5A":"#A0AABF",lineHeight:1.5}}>{f.text}</span>
+                      <span style={{fontSize:13,color:f.ok?plan.color:"#CDD0D8",flexShrink:0}}>✓</span>
+                      <span style={{fontSize:12,color:"#2A3A5A",lineHeight:1.5}}>{f.text}</span>
                     </div>
                   ))}
+                  {plan.extraLabel&&(
+                    <>
+                      <div style={{fontSize:11,color:plan.color,fontWeight:700,marginTop:6,paddingTop:8,borderTop:"1px dashed #D0E8D0"}}>{plan.extraLabel}</div>
+                      {plan.extra.map((f,i)=>(
+                        <div key={i} style={{display:"flex",gap:7,alignItems:"flex-start"}}>
+                          <span style={{fontSize:13,color:plan.color,flexShrink:0}}>＋</span>
+                          <span style={{fontSize:12,color:"#1A4A2A",fontWeight:600,lineHeight:1.5}}>{f.text}</span>
+                        </div>
+                      ))}
+                    </>
+                  )}
                 </div>
+
                 {plan.btnHref?(
                   <a href={plan.btnHref} style={{display:"block",textAlign:"center",padding:"12px",borderRadius:12,background:plan.btnBg,color:plan.btnColor,fontSize:14,fontWeight:700,textDecoration:"none",border:`1.5px solid ${plan.border}`}}>
                     {plan.btnText}
                   </a>
                 ):(
-                  <button
-                    onClick={()=>plan.priceId&&handleCheckout(plan.priceId)}
+                  <button onClick={()=>plan.priceId&&handleCheckout(plan.priceId)}
                     disabled={checkoutLoading===plan.priceId}
                     style={{width:"100%",padding:"12px",borderRadius:12,border:"none",background:plan.btnBg,color:plan.btnColor,fontSize:14,fontWeight:700,cursor:"pointer"}}>
                     {checkoutLoading===plan.priceId?"處理中...":plan.btnText}
@@ -206,25 +214,6 @@ export default function PricingPage(){
               </div>
             </div>
           ))}
-        </div>
-
-        <div style={{background:"#fff",borderRadius:20,padding:"24px",boxShadow:"0 2px 12px rgba(0,0,0,0.06)",marginBottom:20}}>
-          <div style={{fontSize:15,fontWeight:700,color:"#1A2B4A",marginBottom:16}}>📍 四個方案對應四個階段</div>
-          <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:12}}>
-            {[
-              {icon:"🔍",stage:"找房階段",plan:"基礎陪跑 $19.9/月",desc:"手持有效券，正在找接受Section 8的房東，需要中文指引和截止日提醒"},
-              {icon:"🤝",stage:"急需房東匹配",plan:"全程陪跑 $49.9/月",desc:"自己找不到願意接受Section 8的房東，住易顧問優先為你匹配，含申請包代辦"},
-              {icon:"🏠",stage:"已入住後",plan:"年審通 $79/年",desc:"已成功租到房，需要年審截止提醒和Housing Connect抽籤通知"},
-              {icon:"💡",stage:"初步了解資格",plan:"免費版",desc:"不知道自己是否符合申請資格，先免費測算AMI和可申請項目"},
-            ].map((s,i)=>(
-              <div key={i} style={{background:"#F7F8FA",borderRadius:12,padding:"14px"}}>
-                <div style={{fontSize:22,marginBottom:6}}>{s.icon}</div>
-                <div style={{fontSize:13,fontWeight:700,color:"#1A2B4A",marginBottom:4}}>{s.stage}</div>
-                <div style={{fontSize:12,color:"#2A5A9A",fontWeight:600,marginBottom:6}}>{s.plan}</div>
-                <div style={{fontSize:11,color:"#5A6A8A",lineHeight:1.6}}>{s.desc}</div>
-              </div>
-            ))}
-          </div>
         </div>
 
         <div style={{background:"#fff",borderRadius:20,padding:"24px",boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
