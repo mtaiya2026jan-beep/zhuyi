@@ -8,6 +8,7 @@ const CARDS=[
   {icon:"🏛️",title:"福利住房數據庫",sub:"三大機構房源  全美8券房東  每月更新",href:"/database",color:"#B05A00"},
   {icon:"🎯",title:"住房全程陪跑計劃",sub:"基礎陪跑 $19.9/月 · 全程陪跑 $49.9/月 · 年審通 $79/年",href:"/pricing",color:"#1A6A3A"},
   {icon:"⏰",title:"截止日提醒登記",sub:"Section 8券截止、年審、收入變更 — 自動郵件提醒",href:"/reminders",color:"#2A5A9A"},
+  {icon:"📢",title:"變更申報指引",sub:"收入/家庭/地址/婚姻等9項變更 — 中文申報步驟",href:"/changes",color:"#7A4A9A"},
 ];
 export default function Home(){
   const router=useRouter();
