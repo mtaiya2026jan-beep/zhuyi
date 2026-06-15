@@ -26,8 +26,8 @@ const ORGS=[
       "收入需低於AMI 50%（4口之家約$69,275）",
     ],
     alert:"⚠️ 目前輪候名單已關閉，新申請者需等待下次開放。上次開放為2024年6月，隨機抽選20萬戶進入輪候。",
-    url:"https://selfserve.nycha.info",
-    urlText:"查看NYCHA輪候狀態",
+    url:"/ami",
+    urlText:"先測算AMI資格，確認是否符合條件 →",
     guide:[
       "登入 selfserve.nycha.info 查詢現有申請狀態",
       "確保聯繫方式和地址保持最新，以免錯過通知",
@@ -59,8 +59,8 @@ const ORGS=[
       "⭐ 新增：紐約州HAVP住房券（2026年3月起）不限移民身份",
     ],
     alert:"💡 HAVP是新項目：紐約州住房券，不需要輪候名單，由政府合作機構代申請，不限移民身份。聯繫住易了解申請方式。",
-    url:"https://housingconnect.nyc.gov",
-    urlText:"前往Housing Connect查看申請中項目",
+    url:"/ami",
+    urlText:"先測算AMI，再去Housing Connect申請 →",
     guide:[
       "在housingconnect.nyc.gov免費建立帳號",
       "填寫家庭收入和人口，系統自動推送符合條件項目",
@@ -93,8 +93,8 @@ const ORGS=[
       "適合已有固定居住需求、不急於搬遷的家庭",
     ],
     alert:"",
-    url:"https://hcr.ny.gov/find-affordable-housing",
-    urlText:"前往HCR查詢項目",
+    url:"/ami",
+    urlText:"先測算AMI資格 →",
     guide:[
       "進入hcr.ny.gov，選擇'Find Affordable Housing'",
       "輸入所在區域和家庭收入篩選合適項目",
