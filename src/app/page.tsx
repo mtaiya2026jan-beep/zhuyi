@@ -1,60 +1,119 @@
 "use client";
 import {useRouter} from "next/navigation";
-const CARDS=[
-  {icon:"🏠",title:"我想申請保障房",sub:"AMI測算  找到可申請項目",href:"/ami",color:"#1A2B4A"},
-  {icon:"🏷️",title:"我有 Section 8 持券",sub:"登記持券  優先匹配華人房東",href:"/voucher",color:"#2A5A9A"},
-  {icon:"🏘️",title:"我是華人房東",sub:"登記房源  接受持券租客",href:"/landlord",color:"#3A7A6A"},
-  {icon:"📋",title:"我已經申請了",sub:"診斷進度  查看卡在哪個環節",href:"/status",color:"#7A4A9A"},
-  {icon:"🏛️",title:"福利住房數據庫",sub:"三大機構房源  全美8券房東  每月更新",href:"/database",color:"#B05A00"},
-  {icon:"🎯",title:"住房全程陪跑計劃",sub:"基礎陪跑 $19.9/月 · 全程陪跑 $49.9/月 · 年審通 $79/年",href:"/pricing",color:"#1A6A3A"},
-  {icon:"⏰",title:"截止日提醒登記",sub:"Section 8券截止、年審、收入變更 — 自動郵件提醒",href:"/reminders",color:"#2A5A9A"},
-  {icon:"📢",title:"變更申報指引",sub:"收入/家庭/地址/婚姻等9項變更 — 中文申報步驟",href:"/changes",color:"#7A4A9A"},
+
+const SCENES=[
+  {
+    icon:"🏠",
+    title:"我想申請保障房",
+    sub:"AMI測算 · Housing Connect追蹤 · 中文填表指引",
+    href:"/ami",
+    accent:"#3B82F6",
+    bg:"#EFF6FF",
+  },
+  {
+    icon:"🏷️",
+    title:"我有 Section 8 持券",
+    sub:"找房匹配 · 截止提醒 · 延期申請指引",
+    href:"/voucher",
+    accent:"#10B981",
+    bg:"#F0FDF4",
+  },
+  {
+    icon:"🏡",
+    title:"我已入住保障房",
+    sub:"年審提醒 · 變更申報 · 換房指引",
+    href:"/changes",
+    accent:"#8B5CF6",
+    bg:"#FAF5FF",
+  },
 ];
+
+const STATS=[
+  {num:"17.7萬",label:"NYCHA公租房"},
+  {num:"10萬+",label:"Section 8持券家庭"},
+  {num:"2.5萬+",label:"接受8券房東"},
+  {num:"免費",label:"AMI資格測算"},
+];
+
 export default function Home(){
   const router=useRouter();
-  return (
-    <div style={{fontFamily:"PingFang TC,Noto Sans TC,sans-serif",minHeight:"100vh",background:"#F7F8FA"}}>
-      <div style={{background:"#1A2B4A",padding:"0 24px"}}>
-        <div style={{maxWidth:680,margin:"0 auto",display:"flex",alignItems:"center",justifyContent:"space-between",height:60}}>
-          <div style={{color:"#fff",fontSize:22,fontWeight:800}}>住易 <span style={{fontSize:14,color:"#7A9CC8",fontWeight:400}}>ZhuYi</span></div>
-          <div style={{fontSize:13,color:"#7A9CC8"}}>紐約華人住房福利平台</div>
-        </div>
+  return(
+    <div style={{fontFamily:"PingFang TC,-apple-system,sans-serif",minHeight:"100vh",background:"#F2F2F7"}}>
+
+      {/* 頂欄 */}
+      <div style={{background:"#0A1628",padding:"0 20px",height:52,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div style={{color:"#fff",fontSize:18,fontWeight:700,letterSpacing:0.5}}>住易 <span style={{color:"rgba(255,255,255,0.35)",fontSize:13,fontWeight:400}}>ZhuYi</span></div>
+        <a href="/pricing" style={{fontSize:12,color:"rgba(255,255,255,0.5)",textDecoration:"none"}}>陪跑套餐</a>
       </div>
-      <div style={{background:"linear-gradient(160deg,#2A5A9A 0%,#1A3A6A 100%)",padding:"48px 24px 56px",textAlign:"center"}}>
-        <div style={{maxWidth:520,margin:"0 auto"}}>
-          <div style={{fontSize:15,color:"#9ABCE8",letterSpacing:2,marginBottom:14}}>深耕紐約  服務華人</div>
-          <h1 style={{fontSize:32,fontWeight:800,color:"#fff",lineHeight:1.35,marginBottom:16}}>紐約保障房福利<br/>你也可以申請到</h1>
-          <p style={{fontSize:15,color:"#9BB5D4",lineHeight:1.8}}>專為華人移民家庭設計  幫你看懂政策  測算資格  找到匹配房源</p>
-          <div style={{marginTop:14,fontSize:12,color:"rgba(255,255,255,0.45)",letterSpacing:1}}>全程中文 · 免費測算 · 2026 HUD最新數據</div>
-        </div>
+
+      {/* Hero */}
+      <div style={{background:"#0A1628",padding:"48px 24px 56px",textAlign:"center"}}>
+        <div style={{fontSize:11,color:"rgba(255,255,255,0.35)",letterSpacing:3,marginBottom:16,textTransform:"uppercase"}}>紐約華人住房服務</div>
+        <h1 style={{margin:"0 0 14px",fontSize:32,fontWeight:800,color:"#fff",lineHeight:1.2,letterSpacing:-0.5}}>
+          保障房申請<br/><span style={{color:"#60A5FA"}}>中文全程幫你辦</span>
+        </h1>
+        <p style={{margin:"0 0 32px",fontSize:15,color:"rgba(255,255,255,0.45)",lineHeight:1.8}}>
+          從測算資格到找到住所<br/>每一步都有中文指引
+        </p>
+        <button onClick={()=>router.push("/ami")}
+          style={{background:"#3B82F6",color:"#fff",border:"none",borderRadius:50,padding:"15px 36px",fontSize:16,fontWeight:700,cursor:"pointer",letterSpacing:0.3}}>
+          免費測算我的資格
+        </button>
+        <div style={{marginTop:12,fontSize:12,color:"rgba(255,255,255,0.25)"}}>無需登記 · 即時結果</div>
       </div>
-      <div style={{maxWidth:680,margin:"0 auto",padding:"0 20px 50px"}}>
-        <div style={{fontSize:17,color:"#8899B0",margin:"36px 0 18px",textAlign:"center",fontWeight:500}}>請選擇你的情況</div>
-        <div style={{display:"flex",flexDirection:"column",gap:16}}>
-          {CARDS.map(c=>(
-            <button key={c.href+c.title} onClick={()=>router.push(c.href)}
-              style={{background:"#fff",border:"none",borderRadius:24,padding:"30px 28px",textAlign:"left",
-                boxShadow:"0 2px 16px rgba(0,0,0,0.08)",display:"flex",alignItems:"center",gap:24,cursor:"pointer"}}>
-              <div style={{fontSize:50,flexShrink:0}}>{c.icon}</div>
-              <div style={{flex:1}}>
-                <div style={{fontSize:21,fontWeight:700,color:"#1A2B4A",marginBottom:6}}>{c.title}</div>
-                <div style={{fontSize:14,color:"#8899B0"}}>{c.sub}</div>
+
+      <div style={{maxWidth:600,margin:"0 auto",padding:"28px 16px 48px"}}>
+
+        {/* 場景選擇 */}
+        <div style={{fontSize:11,color:"#8E8E93",letterSpacing:1.5,marginBottom:12,paddingLeft:4,textTransform:"uppercase"}}>你的情況是？</div>
+        <div style={{display:"flex",flexDirection:"column",gap:10,marginBottom:32}}>
+          {SCENES.map(s=>(
+            <button key={s.href} onClick={()=>router.push(s.href)}
+              style={{background:"#fff",border:"none",borderRadius:18,padding:"18px 20px",textAlign:"left",
+                display:"flex",alignItems:"center",gap:16,cursor:"pointer",width:"100%"}}>
+              <div style={{width:46,height:46,borderRadius:14,background:s.bg,display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>
+                {s.icon}
               </div>
-              <div style={{fontSize:24,color:c.color,fontWeight:700,flexShrink:0}}>→</div>
+              <div style={{flex:1}}>
+                <div style={{fontSize:16,fontWeight:600,color:"#1A1A1A",marginBottom:4}}>{s.title}</div>
+                <div style={{fontSize:12,color:"#8E8E93",lineHeight:1.5}}>{s.sub}</div>
+              </div>
+              <div style={{fontSize:22,color:"#C7C7CC",flexShrink:0}}>›</div>
             </button>
           ))}
         </div>
-        <div style={{marginTop:28,background:"#fff",borderRadius:18,padding:"18px 22px",boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
-          <div style={{display:"flex",justifyContent:"center",textAlign:"center"}}>
-            {[["17.7萬","NYCHA公房套數"],["10萬+","Section 8持券家庭"],["2.5萬+","接受8券房東"],["10萬+","紐約華人移民家庭"]].map(([num,label],i,arr)=>(
-              <div key={label} style={{flex:1,borderRight:i<arr.length-1?"1px solid #ECEEF3":"none",padding:"4px 0"}}>
-                <div style={{fontSize:20,fontWeight:800,color:"#1A2B4A"}}>{num}</div>
-                <div style={{fontSize:11,color:"#8899B0",marginTop:4}}>{label}</div>
-              </div>
-            ))}
-          </div>
+
+        {/* 數據條 */}
+        <div style={{fontSize:11,color:"#8E8E93",letterSpacing:1.5,marginBottom:12,paddingLeft:4,textTransform:"uppercase"}}>紐約住房現況</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:32}}>
+          {STATS.map(s=>(
+            <div key={s.label} style={{background:"#fff",borderRadius:14,padding:"16px",textAlign:"center"}}>
+              <div style={{fontSize:22,fontWeight:700,color:"#1A1A1A"}}>{s.num}</div>
+              <div style={{fontSize:11,color:"#8E8E93",marginTop:4}}>{s.label}</div>
+            </div>
+          ))}
         </div>
-        <div style={{textAlign:"center",marginTop:14,fontSize:12,color:"#B0BBC8"}}>住易 ZhuYi · 紐約華人住房福利平台</div>
+
+        {/* 底部服務卡 */}
+        <div style={{fontSize:11,color:"#8E8E93",letterSpacing:1.5,marginBottom:12,paddingLeft:4,textTransform:"uppercase"}}>服務</div>
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10,marginBottom:16}}>
+          <button onClick={()=>router.push("/pricing")}
+            style={{background:"#0A1628",border:"none",borderRadius:18,padding:"20px 16px",textAlign:"left",cursor:"pointer"}}>
+            <div style={{fontSize:14,fontWeight:700,color:"#fff",marginBottom:6}}>全程陪跑</div>
+            <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",lineHeight:1.6,marginBottom:14}}>基礎 $19.9<br/>全程 $49.9 / 月</div>
+            <div style={{background:"#3B82F6",color:"#fff",fontSize:12,fontWeight:600,padding:"7px 14px",borderRadius:20,display:"inline-block"}}>查看套餐</div>
+          </button>
+          <button onClick={()=>router.push("/landlord")}
+            style={{background:"#fff",border:"none",borderRadius:18,padding:"20px 16px",textAlign:"left",cursor:"pointer"}}>
+            <div style={{fontSize:14,fontWeight:700,color:"#1A1A1A",marginBottom:6}}>房東登記</div>
+            <div style={{fontSize:11,color:"#8E8E93",lineHeight:1.6,marginBottom:14}}>接受持券租客<br/>免費登記空房</div>
+            <div style={{background:"#F2F2F7",color:"#1A1A1A",fontSize:12,fontWeight:600,padding:"7px 14px",borderRadius:20,display:"inline-block"}}>立即登記</div>
+          </button>
+        </div>
+
+        <div style={{textAlign:"center",fontSize:11,color:"#C7C7CC",marginTop:8}}>
+          住易 ZhuYi · 紐約華人住房福利平台
+        </div>
       </div>
     </div>
   );
