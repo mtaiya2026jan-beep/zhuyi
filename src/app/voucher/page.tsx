@@ -205,13 +205,24 @@ export default function VoucherPage(){
             </button>
           </div>
         )}
+        {/* 截止提醒 — 永遠顯示 */}
+        <div style={{background:"#fff",borderRadius:16,padding:20,marginBottom:12,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
+          <div style={{fontSize:15,fontWeight:700,color:"#1A2B4A",marginBottom:6}}>⏰ 設定券截止日提醒</div>
+          <div style={{fontSize:13,color:"#8899B0",marginBottom:14,lineHeight:1.6}}>住易在截止日前自動發中文提醒郵件，不漏接任何截止日</div>
+          <a href="/reminders" style={{display:"block",padding:"12px",borderRadius:12,background:"#1A2B4A",color:"#fff",fontSize:14,fontWeight:700,textDecoration:"none",textAlign:"center"}}>設定截止日提醒 →</a>
+        </div>
+
+        {/* 訂閱按鈕 — 永遠顯示 */}
+        <div style={{background:"linear-gradient(135deg,#2A5A9A,#1A3A6A)",borderRadius:16,padding:20,textAlign:"center",marginBottom:16}}>
+          <div style={{fontSize:15,fontWeight:700,color:"#fff",marginBottom:6}}>需要中文全程指引？</div>
+          <div style={{fontSize:13,color:"#9ABCE8",marginBottom:16,lineHeight:1.6}}>基礎陪跑 $19.9/月 · 全程陪跑 $49.9/月<br/>截止日提醒 · 延期申請信 · 優先房東匹配</div>
+          <a href="/pricing" style={{display:"inline-block",padding:"12px 32px",borderRadius:50,background:"linear-gradient(135deg,#FFD066,#FFA500)",color:"#1A2B4A",fontSize:14,fontWeight:800,textDecoration:"none"}}>
+            查看陪跑套餐 →
+          </a>
+        </div>
+
+        <div style={{textAlign:"center",fontSize:11,color:"#A0AABF",paddingBottom:32}}>住易 ZhuYi · Section 8 持券找房服務</div>
       </div>
-      <div style={{background:"#fff",borderRadius:16,padding:20,marginBottom:12,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
-        <div style={{fontSize:15,fontWeight:700,color:"#1A2B4A",marginBottom:6}}>⏰ 設定券截止日提醒</div>
-        <div style={{fontSize:13,color:"#8899B0",marginBottom:14,lineHeight:1.6}}>住易在截止日前自動發中文提醒郵件，不漏接任何截止日</div>
-        <a href="/reminders" style={{display:"block",padding:"12px",borderRadius:12,background:"#1A2B4A",color:"#fff",fontSize:14,fontWeight:700,textDecoration:"none",textAlign:"center"}}>設定截止日提醒 →</a>
-      </div>
-      <div style={{textAlign:"center",fontSize:11,color:"#A0AABF",paddingBottom:32}}>住易 ZhuYi · Section 8 持券找房服務</div>
     </div>
   );
 }
