@@ -10,8 +10,9 @@ const PLANS = {
 export async function POST(req: NextRequest) {
   try {
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, { apiVersion: '2026-05-27.dahlia' })
-    const { plan } = await req.json()
-    const p = PLANS[plan as keyof typeof PLANS]
+    const body = await req.json()
+    const plan = body.plan || Object.keys(PLANS).find(k => PLANS[k as keyof typeof PLANS].price_id === body.priceId)
+    const p = plan ? PLANS[plan as keyof typeof PLANS] : null
     if (!p) return NextResponse.json({ error: '無效的方案' }, { status: 400 })
     const origin = req.headers.get('origin') || 'https://zhuyi-lyart.vercel.app'
     const session = await stripe.checkout.sessions.create({
