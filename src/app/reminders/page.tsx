@@ -8,8 +8,6 @@ const GROUPS=[
     icon:"🏷️",
     types:[
       {id:"voucher_expiry",label:"Section 8券截止日",icon:"🏷️",desc:"持券找房截止，提前60/30/7天提醒",days:[60,30,7]},
-      {id:"income_change",label:"收入變更申報",icon:"💰",desc:"收入變更後30天內必須報NYCHA，提前15/7/1天提醒",days:[15,7,1]},
-      {id:"family_change",label:"家庭成員變更",icon:"👨‍👩‍👧",desc:"新增/遷出家庭成員後30天內必須申報",days:[15,7,1]},
       {id:"other",label:"其他自定義提醒",icon:"⏰",desc:"自定義任何需要提醒的截止日",days:[30,7,1]},
     ]
   },
