@@ -27,7 +27,9 @@ const ORGS=[
     ],
     alert:"⚠️ 目前輪候名單已關閉，新申請者需等待下次開放。上次開放為2024年6月，隨機抽選20萬戶進入輪候。",
     url:"/ami",
-    urlText:"先測算AMI資格，確認是否符合條件 →",
+    urlText:"先測算AMI資格 →",
+    officialUrl:"https://selfserve.nycha.info",
+    officialUrlText:"NYCHA官網查輪候",
     guide:[
       "登入 selfserve.nycha.info 查詢現有申請狀態",
       "確保聯繫方式和地址保持最新，以免錯過通知",
@@ -60,7 +62,9 @@ const ORGS=[
     ],
     alert:"💡 HAVP是新項目：紐約州住房券，不需要輪候名單，由政府合作機構代申請，不限移民身份。聯繫住易了解申請方式。",
     url:"/ami",
-    urlText:"先測算AMI，再去Housing Connect申請 →",
+    urlText:"先測算AMI資格 →",
+    officialUrl:"https://housingconnect.nyc.gov",
+    officialUrlText:"Housing Connect申請",
     guide:[
       "在housingconnect.nyc.gov免費建立帳號",
       "填寫家庭收入和人口，系統自動推送符合條件項目",
@@ -95,6 +99,8 @@ const ORGS=[
     alert:"",
     url:"/ami",
     urlText:"先測算AMI資格 →",
+    officialUrl:"https://hcr.ny.gov/find-affordable-housing",
+    officialUrlText:"HCR官網查詢",
     guide:[
       "進入hcr.ny.gov，選擇'Find Affordable Housing'",
       "輸入所在區域和家庭收入篩選合適項目",
@@ -128,6 +134,8 @@ const ORGS=[
     alert:"",
     url:"/landlord",
     urlText:"房東免費登記 →",
+    officialUrl:"",
+    officialUrlText:"",
     guide:[],
   },
 ];
@@ -200,10 +208,18 @@ export default function DatabasePage(){
                 </div>
               )}
             </div>
-            <a href={org.url} target={org.url.startsWith("http")?"_blank":"_self"} rel="noopener noreferrer"
-              style={{display:"block",padding:"14px 20px",background:org.color,color:"#fff",fontSize:14,fontWeight:700,textDecoration:"none",textAlign:"center"}}>
-              {org.urlText}
-            </a>
+            <div style={{display:"flex",gap:0}}>
+              <a href={org.url} target={org.url.startsWith("http")?"_blank":"_self"} rel="noopener noreferrer"
+                style={{flex:1,display:"block",padding:"14px 12px",background:org.color,color:"#fff",fontSize:13,fontWeight:700,textDecoration:"none",textAlign:"center"}}>
+                {org.urlText}
+              </a>
+              {org.officialUrl&&(
+                <a href={org.officialUrl} target="_blank" rel="noopener noreferrer"
+                  style={{flex:1,display:"block",padding:"14px 12px",background:org.color+"CC",color:"#fff",fontSize:13,fontWeight:600,textDecoration:"none",textAlign:"center",borderLeft:"1px solid rgba(255,255,255,0.2)"}}>
+                  {org.officialUrlText}
+                </a>
+              )}
+            </div>
           </div>
         ))}
 
