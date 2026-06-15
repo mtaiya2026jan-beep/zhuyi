@@ -159,9 +159,7 @@ export default function PricingPage(){
                   <div style={{fontSize:12,color:"#5A7A5A",background:"#F0FAF0",borderRadius:6,padding:"4px 8px",display:"inline-block"}}>
                     💡 {plan.valueMsg}
                   </div>
-                  {(plan as any).note&&(
-                    <div style={{fontSize:11,color:"#1A6A3A",marginTop:6,fontWeight:600}}>{plan.note as string}</div>
-                  )}
+                  
                 </div>
 
                 {/* 功能列表 */}
@@ -184,7 +182,7 @@ export default function PricingPage(){
                   </a>
                 ):(
                   <button
-                    onClick={()=>handleCheckout("price_1Thi3JC6gUPvob2xOtMB0n6f")}
+                    onClick={()=>handleCheckout("price_1Thi3KC6gUPvob2x2IBSa9Sp")}
                     disabled={checkoutLoading}
                     style={{width:"100%",padding:"13px",borderRadius:12,border:"none",
                       background:plan.btnBg,color:plan.btnColor,fontSize:15,fontWeight:700,
