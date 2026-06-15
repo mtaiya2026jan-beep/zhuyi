@@ -17,6 +17,21 @@ const PRO_EXTRA = [
   "24小時AI中文住房助手",
 ];
 
+const ANNUAL_FEATURES = [
+  "年審截止提醒（提前60天）",
+  "AI年審文件審核",
+  "收入變更申報提醒+中文指引",
+  "家庭成員變更提醒+中文指引",
+  "地址/婚姻/學生/就業狀態變更提醒",
+  "資產及其他收入來源變更提醒",
+  "殘障/醫療狀況變更提醒",
+  "移民身份變更提醒（附免責說明）",
+  "刑事記錄/長期離所變更提醒",
+  "換房資格提醒+Section 8房東庫查閱",
+  "房東違規中文投訴指引（HPD/DHCR）",
+  "租約到期提醒（提前60天）",
+];
+
 const PLANS = [
   {
     id:"free",
@@ -41,8 +56,7 @@ const PLANS = [
       {text:"個性化房源每週推送",ok:false},
       {text:"中文填表指引",ok:false},
       {text:"截止日提醒",ok:false},
-      {text:"延期申請信",ok:false},
-      {text:"AI材料審核 / 住房助手",ok:false},
+      {text:"AI材料審核",ok:false},
       {text:"優先房東匹配",ok:false},
     ],
     extraLabel:null,
@@ -94,7 +108,7 @@ const PLANS = [
     nameEn:"ANNUAL",
     price:"$79",
     priceSub:"/ 年，一次付清",
-    valueMsg:"已入住保障房，年審不漏接",
+    valueMsg:"全年合規管家，12項變更全覆蓋",
     color:"#7A4A9A",
     border:"#7A4A9A",
     btnBg:"linear-gradient(135deg,#7A4A9A,#5A2A7A)",
@@ -104,23 +118,19 @@ const PLANS = [
     highlight:false,
     tag:"",
     priceId:"price_1Thi3KC6gUPvob2xsL1119G9",
-    features:[
-      {text:"Section 8 年審截止提醒",ok:true},
-      {text:"Housing Connect 抽籤到期通知",ok:true},
-      {text:"提前30天預警",ok:true},
-      {text:"中文提醒郵件",ok:true},
-    ],
+    features: ANNUAL_FEATURES.map(t=>({text:t,ok:true})),
     extraLabel:null,
     extra:[],
   },
 ];
 
 const FAQS = [
-  {q:"基礎和全程陪跑差在哪裡？",a:"基礎陪跑提供追蹤、提醒、指引等自助工具。全程陪跑額外提供AI申請材料審核、個性化延期申請信自動生成、優先房東匹配，以及24小時AI住房助手，適合需要更多支援的持券人。"},
-  {q:"AI申請材料審核怎麼運作？",a:"你提交申請材料前，上傳至住易系統，AI會根據Housing Connect或NYCHA的要求逐項檢查，指出缺漏或格式問題。最終提交由你本人確認，住易提供參考性建議。"},
-  {q:"延期申請信是什麼？",a:"Section 8券超過120天未找到房源，可向NYCHA申請Reasonable Accommodation延期。住易系統根據你登記的個人情況自動生成個性化英文申請信，你下載打印簽名提交即可。"},
-  {q:"年審通和陪跑有什麼不同？",a:"年審通針對已成功租到保障房的家庭，功能是年審截止和抽籤到期提醒。陪跑套餐針對仍在找房的持券人。"},
-  {q:"可以隨時取消嗎？",a:"可以，月費套餐隨時取消，不收違約金。取消後當月服務繼續有效至週期結束。"},
+  {q:"基礎和全程陪跑差在哪裡？",a:"基礎陪跑提供追蹤、提醒、指引等自助工具。全程陪跑額外提供AI申請材料審核、個性化延期申請信自動生成、優先房東匹配，以及24小時AI住房助手。"},
+  {q:"AI申請材料審核怎麼運作？",a:"提交申請前上傳材料，AI根據Housing Connect或NYCHA要求逐項檢查，指出缺漏或格式問題。最終提交由你本人確認，住易提供參考性建議。"},
+  {q:"延期申請信是什麼？",a:"Section 8券超過120天未找到房源，可向NYCHA申請Reasonable Accommodation延期。住易根據你的個人情況自動生成英文申請信，下載打印簽名提交即可。"},
+  {q:"年審通是只用一次嗎？",a:"不是。Section 8年審每年一次，但12項變更申報（收入、家庭成員、地址等）全年隨時可能發生。年審通是全年合規管家，任何需要申報的變更都會提醒你並提供中文指引。"},
+  {q:"移民身份變更住易能幫什麼？",a:"住易提供NYCHA申報流程的中文說明和提醒，告知你需要申報。具體移民法律建議需諮詢持牌移民律師，住易不提供法律意見。"},
+  {q:"可以隨時取消嗎？",a:"月費套餐隨時取消，不收違約金，取消後當月服務繼續有效至週期結束。年審通為年費，不支持中途退款。"},
 ];
 
 export default function PricingPage(){
@@ -179,12 +189,11 @@ export default function PricingPage(){
                     💡 {plan.valueMsg}
                   </div>
                 </div>
-
                 <div style={{flex:1,display:"flex",flexDirection:"column",gap:7,marginBottom:18}}>
                   {plan.features.map((f,i)=>(
                     <div key={i} style={{display:"flex",gap:7,alignItems:"flex-start"}}>
-                      <span style={{fontSize:13,color:f.ok?plan.color:"#CDD0D8",flexShrink:0}}>✓</span>
-                      <span style={{fontSize:12,color:"#2A3A5A",lineHeight:1.5}}>{f.text}</span>
+                      <span style={{fontSize:13,color:f.ok?plan.color:"#CDD0D8",flexShrink:0}}>{f.ok?"✓":"✗"}</span>
+                      <span style={{fontSize:12,color:f.ok?"#2A3A5A":"#A0AABF",lineHeight:1.5}}>{f.text}</span>
                     </div>
                   ))}
                   {plan.extraLabel&&(
@@ -199,7 +208,6 @@ export default function PricingPage(){
                     </>
                   )}
                 </div>
-
                 {plan.btnHref?(
                   <a href={plan.btnHref} style={{display:"block",textAlign:"center",padding:"12px",borderRadius:12,background:plan.btnBg,color:plan.btnColor,fontSize:14,fontWeight:700,textDecoration:"none",border:`1.5px solid ${plan.border}`}}>
                     {plan.btnText}
