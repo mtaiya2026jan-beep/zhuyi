@@ -4,7 +4,7 @@ import {useState} from "react";
 const BASIC_FEATURES = [
   "AMI收入資格測算",
   "Housing Connect 房源查閱",
-  "個性化房源每週推送",
+  "Housing Connect新項目每週中文週報",
   "中文填表指引（逐欄說明）",
   "截止日集中提醒",
   "延期申請信通用模板",
@@ -53,7 +53,7 @@ const PLANS = [
       {text:"AMI收入資格測算",ok:true},
       {text:"Housing Connect 房源查閱",ok:true},
       {text:"申請狀態診斷（基礎版）",ok:true},
-      {text:"個性化房源每週推送",ok:false},
+      {text:"Housing Connect新項目每週中文週報",ok:false},
       {text:"中文填表指引",ok:false},
       {text:"截止日提醒",ok:false},
       {text:"AI材料審核",ok:false},
