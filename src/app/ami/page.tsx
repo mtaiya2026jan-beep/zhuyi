@@ -1,26 +1,27 @@
 "use client";
-import { useState } from "react";
-export default function AmiPage() {
-  const [income, setIncome] = useState("");
-  const [size, setSize] = useState(3);
-  const [result, setResult] = useState<{pct:number;label:string;color:string;bg:string;border:string;programs:string[];note:string;base:number} | null>(null);
-  const AMI: Record<number,number> = {1:97000,2:110850,3:124700,4:138550,5:149650,6:160750,7:171800,8:182900};
-  const TIERS = [
+import {useState} from "react";
+
+export default function AmiPage(){
+  const [income,setIncome]=useState("");
+  const [size,setSize]=useState(3);
+  const [result,setResult]=useState<{pct:number;label:string;color:string;bg:string;border:string;programs:string[];note:string;base:number}|null>(null);
+  const AMI:Record<number,number>={1:97000,2:110850,3:124700,4:138550,5:149650,6:160750,7:171800,8:182900};
+  const TIERS=[
     {maxPct:30,label:"極低收入",color:"#E84A4A",bg:"#FFF0F0",border:"#E84A4A",programs:["Section 8持券（最優先）","NYCHA公房申請","SOTA緊急住房"],note:"優先級最高，福利最多"},
     {maxPct:50,label:"很低收入",color:"#E87D2A",bg:"#FFF6EE",border:"#E87D2A",programs:["Section 8持券","Housing Connect保障房","低收入稅收抵免房"],note:"可申請大部分保障房項目"},
     {maxPct:80,label:"低收入",color:"#D4A017",bg:"#FFFBEE",border:"#D4A017",programs:["Housing Connect低價房","部分市補貼項目","工薪家庭住房計劃"],note:"仍可申請多個補貼項目"},
     {maxPct:120,label:"中等收入",color:"#4A8F6F",bg:"#F0FAF5",border:"#4A8F6F",programs:["Housing Connect中價房","421-a優惠房","部分工薪家庭項目"],note:"可申請中價保障房抽籤"},
     {maxPct:999,label:"中高收入",color:"#5A6A8A",bg:"#F4F6FB",border:"#5A6A8A",programs:["Housing Connect中高價房","市場價優先抽籤（部分樓盤）"],note:"選擇有限，建議關注市場價房源"},
   ];
-  function calc() {
-    const inc = parseFloat(income);
-    if (!inc || inc <= 0) return;
-    const base = AMI[Math.min(Math.max(size,1),8)];
-    const pct = Math.round((inc/base)*100);
-    const tier = TIERS.find(t => pct <= t.maxPct) ?? TIERS[TIERS.length-1];
-    setResult({pct, ...tier, base});
+  function calc(){
+    const inc=parseFloat(income);
+    if(!inc||inc<=0) return;
+    const base=AMI[Math.min(Math.max(size,1),8)];
+    const pct=Math.round((inc/base)*100);
+    const tier=TIERS.find(t=>pct<=t.maxPct)??TIERS[TIERS.length-1];
+    setResult({pct,...tier,base});
   }
-  return (
+  return(
     <div style={{fontFamily:"PingFang TC,sans-serif",minHeight:"100vh",background:"#F7F8FA"}}>
       <div style={{background:"#2A5A9A",padding:"0 20px",position:"sticky",top:0,zIndex:100}}>
         <div style={{maxWidth:680,margin:"0 auto",display:"flex",alignItems:"center",height:60,gap:14}}>
@@ -33,14 +34,17 @@ export default function AmiPage() {
         <h1 style={{margin:0,fontSize:26,fontWeight:700,color:"#fff",lineHeight:1.35}}>申請保障房　第一步先測AMI</h1>
         <p style={{margin:"12px 0 0",fontSize:15,color:"#9ABCE8",lineHeight:1.7}}>測出AMI檔位 → 查看可申請項目 → 訂閱解鎖房源詳情</p>
       </div>
-      <div style={{maxWidth:600,margin:"0 auto",padding:"24px 16px"}}>
-        <div style={{background:"#fff",borderRadius:16,padding:24,marginBottom:20,boxShadow:"0 2px 12px rgba(0,0,0,0.07)"}}>
+
+      <div style={{maxWidth:600,margin:"0 auto",padding:"24px 16px 48px"}}>
+
+        {/* AMI計算器 */}
+        <div style={{background:"#fff",borderRadius:16,padding:24,marginBottom:16,boxShadow:"0 2px 12px rgba(0,0,0,0.07)"}}>
           <label style={{display:"block",fontSize:14,color:"#5A6A8A",marginBottom:8,fontWeight:600}}>家庭年總收入（稅前，美元）</label>
           <div style={{display:"flex",alignItems:"center",border:"1.5px solid #D0D8E8",borderRadius:10,overflow:"hidden",marginBottom:16}}>
             <span style={{padding:"0 12px",color:"#8899B0",fontSize:16}}>$</span>
             <input type="number" value={income} onChange={e=>setIncome(e.target.value)} placeholder="例：45000"
               style={{flex:1,border:"none",outline:"none",fontSize:18,padding:"12px 4px",background:"transparent"}}
-              onKeyDown={e=>e.key==="Enter"&&calc()} />
+              onKeyDown={e=>e.key==="Enter"&&calc()}/>
           </div>
           <label style={{display:"block",fontSize:14,color:"#5A6A8A",marginBottom:8,fontWeight:600}}>家庭人數</label>
           <div style={{display:"flex",gap:8,marginBottom:20,flexWrap:"wrap"}}>
@@ -51,12 +55,13 @@ export default function AmiPage() {
               </button>
             ))}
           </div>
-          <button onClick={calc}
-            style={{width:"100%",padding:14,borderRadius:12,border:"none",background:"#1A2B4A",color:"#fff",fontSize:16,fontWeight:700,cursor:"pointer"}}>
+          <button onClick={calc} style={{width:"100%",padding:14,borderRadius:12,border:"none",background:"#1A2B4A",color:"#fff",fontSize:16,fontWeight:700,cursor:"pointer"}}>
             立即測算
           </button>
         </div>
-        {result && (
+
+        {/* 測算結果 */}
+        {result&&(
           <>
             <div style={{background:result.bg,border:`2px solid ${result.border}`,borderRadius:16,padding:20,marginBottom:16,textAlign:"center"}}>
               <div style={{fontSize:13,color:result.color,fontWeight:700,marginBottom:4}}>你的家庭年收入 = {result.pct}% AMI</div>
@@ -73,7 +78,7 @@ export default function AmiPage() {
                 </div>
               ))}
             </div>
-            <div style={{background:"#1A2B4A",borderRadius:16,padding:20,color:"#fff"}}>
+            <div style={{background:"#1A2B4A",borderRadius:16,padding:20,marginBottom:16,color:"#fff"}}>
               <div style={{fontSize:14,fontWeight:700,marginBottom:12}}>📋 你的下一步行動</div>
               {(result.pct<=50?[
                 {icon:"🏠",text:"立即登記 Section 8 持券候補名單"},
@@ -95,6 +100,25 @@ export default function AmiPage() {
             </div>
           </>
         )}
+
+        {/* 福利住房數據庫 — 永遠顯示 */}
+        <div style={{background:"#fff",borderRadius:16,padding:20,marginBottom:16,boxShadow:"0 2px 12px rgba(0,0,0,0.06)"}}>
+          <div style={{fontSize:15,fontWeight:700,color:"#1A2B4A",marginBottom:6}}>🏛️ 了解三大申請機構</div>
+          <div style={{fontSize:13,color:"#8899B0",marginBottom:14,lineHeight:1.6}}>NYCHA · HPD · HCR 各機構輪候狀態、適合人群、中文申請指引</div>
+          <a href="/database" style={{display:"block",padding:"12px",borderRadius:12,background:"#1A2B4A",color:"#fff",fontSize:14,fontWeight:700,textDecoration:"none",textAlign:"center"}}>
+            查看福利住房數據庫 →
+          </a>
+        </div>
+
+        {/* 訂閱按鈕 — 永遠顯示 */}
+        <div style={{background:"linear-gradient(135deg,#2A5A9A,#1A3A6A)",borderRadius:16,padding:20,textAlign:"center"}}>
+          <div style={{fontSize:15,fontWeight:700,color:"#fff",marginBottom:6}}>需要中文全程指引？</div>
+          <div style={{fontSize:13,color:"#9ABCE8",marginBottom:16,lineHeight:1.6}}>基礎陪跑 $19.9/月 · 全程陪跑 $49.9/月<br/>中文填表指引 · 截止日提醒 · 優先房東匹配</div>
+          <a href="/pricing" style={{display:"inline-block",padding:"12px 32px",borderRadius:50,background:"linear-gradient(135deg,#FFD066,#FFA500)",color:"#1A2B4A",fontSize:14,fontWeight:800,textDecoration:"none"}}>
+            查看陪跑套餐 →
+          </a>
+        </div>
+
         <div style={{textAlign:"center",padding:"24px 0 0",fontSize:11,color:"#A0AABF"}}>
           資料來源：HUD 2026 年紐約都會區收入限制・住易 ZhuYi
         </div>
