@@ -6,9 +6,7 @@ const CARDS=[
   {icon:"🏘️",title:"我是華人房東",sub:"登記房源  接受持券租客",href:"/landlord",color:"#3A7A6A"},
   {icon:"📋",title:"我已經申請了",sub:"診斷進度  查看卡在哪個環節",href:"/status",color:"#7A4A9A"},
   {icon:"🏛️",title:"福利住房數據庫",sub:"三大機構房源  全美8券房東  每月更新",href:"/database",color:"#B05A00"},
-  {icon:"🎯",title:"基礎陪跑 $19.9/月",sub:"Housing Connect追蹤  中文填表指引  截止日提醒",href:"/pricing",color:"#2A5A9A"},
-  {icon:"🤝",title:"全程陪跑 $49.9/月",sub:"以上全部  優先房東匹配  申請包辦服務",href:"/pricing",color:"#1A6A5A"},
-  {icon:"📅",title:"年審通 $79/年",sub:"Section 8年審截止  Housing Connect抽籤到期提醒",href:"/pricing",color:"#7A4A9A"},
+  {icon:"🎯",title:"住房全程陪跑計劃",sub:"基礎陪跑 $19.9/月 · 全程陪跑 $49.9/月 · 年審通 $79/年",href:"/pricing",color:"#1A6A3A"},
 ];
 export default function Home(){
   const router=useRouter();
